@@ -1,0 +1,10 @@
+.MainGame {
+    
+    border-width: 3px;
+    border-style: solid;
+}
+
+body {
+    background-color: black;
+    overflow: hidden;
+}
