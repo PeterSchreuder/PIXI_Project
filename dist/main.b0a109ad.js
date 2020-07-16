@@ -42339,21 +42339,67 @@ var GameProperties;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var GameObject = function GameObject(stage, x, y, sprite) {
-  _classCallCheck(this, GameObject);
+var GameObject = /*#__PURE__*/function () {
+  function GameObject(_stage, _x, _y, _sprite) {
+    _classCallCheck(this, GameObject);
 
-  this.sprite = sprite;
-  this.sprite.x = x;
-  this.sprite.y = y;
-  stage.addChild(this.sprite);
-};
+    this._sprite = _sprite;
+    this._sprite.x = _x;
+    this._sprite.y = _y;
+
+    _stage.addChild(this._sprite);
+  }
+
+  _createClass(GameObject, [{
+    key: "moveDirection",
+    value: function moveDirection() {}
+  }, {
+    key: "x",
+    get: function get() {
+      return this._sprite.x;
+    },
+    set: function set(_value) {
+      this._sprite.x = _value;
+    }
+  }, {
+    key: "y",
+    get: function get() {
+      return this._sprite.y;
+    },
+    set: function set(_value) {
+      this._sprite.y = _value;
+    }
+  }, {
+    key: "sprite",
+    get: function get() {
+      return this._sprite;
+    },
+    set: function set(_value) {
+      this._sprite = _value;
+    }
+  }, {
+    key: "tint",
+    get: function get() {
+      return this._sprite.tint;
+    },
+    set: function set(_value) {
+      this._sprite.tint = _value;
+    }
+  }]);
+
+  return GameObject;
+}();
 
 exports.GameObject = GameObject;
-},{}],"src/engine/stages/GameScene.ts":[function(require,module,exports) {
+},{}],"src/engine/components/InputManager.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42362,60 +42408,68 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var __importStar = this && this.__importStar || function (mod) {
-  if (mod && mod.__esModule) return mod;
-  var result = {};
-  if (mod != null) for (var k in mod) {
-    if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-  }
-  result["default"] = mod;
-  return result;
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var PIXI = __importStar(require("pixi.js"));
+var InputManager = /*#__PURE__*/function () {
+  function InputManager(keyboardElement, mouseElement) {
+    _classCallCheck(this, InputManager);
 
-var GameObject_1 = require("../components/GameObject");
+    this.keys = new Map();
+    var keys = this.keys;
+    console.log(this.keys);
+    window.addEventListener("keydown", setKeyDown);
+    window.addEventListener("keyup", setKeyUp);
 
-var GameScene = /*#__PURE__*/function () {
-  function GameScene() {
-    _classCallCheck(this, GameScene);
+    function setKeyDown(e) {
+      var _keyCode = e.keyCode;
+      keys.set(_keyCode, true);
+    }
 
-    this.spriteList = PIXI.loader.resources;
-    console.log("peter", this.spriteList);
-    this.objects = [];
-    this.gameScene = new PIXI.Container();
-    var stage = this.buildScene();
-    this.stage = stage;
+    function setKeyUp(e) {
+      var _keyCode = e.keyCode;
+      keys.set(_keyCode, false);
+    }
   }
 
-  _createClass(GameScene, [{
-    key: "buildScene",
-    value: function buildScene() {
-      this.gameScene = new PIXI.Container();
-      var player = new GameObject_1.GameObject(this.gameScene, 0, 0, this.spriteList.player.texture);
-      return this.gameScene;
+  _createClass(InputManager, [{
+    key: "keyDown",
+    value: function keyDown(_value) {
+      var _return = false;
+      if (this.keys.get(_value)) _return = true;
+      return _return;
     }
   }, {
-    key: "getStage",
-    value: function getStage() {
-      return this.stage;
-    }
-  }, {
-    key: "getObjects",
-    value: function getObjects() {
-      return this.objects;
+    key: "keyUp",
+    value: function keyUp(_value) {
+      var _return = false;
+      if (this.keys.has(_value) && this.keys.get(_value) == false) _return = true;
+      return _return;
     }
   }]);
 
-  return GameScene;
+  return InputManager;
 }();
 
-exports.GameScene = GameScene;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","../components/GameObject":"src/engine/components/GameObject.ts"}],"src/engine/components/GameManager.ts":[function(require,module,exports) {
+exports.InputManager = InputManager;
+
+(function (InputManager) {
+  var vk_Keys;
+
+  (function (vk_Keys) {
+    vk_Keys[vk_Keys["null"] = -1] = "null";
+    vk_Keys[vk_Keys["up"] = 38] = "up";
+    vk_Keys[vk_Keys["down"] = 40] = "down";
+    vk_Keys[vk_Keys["left"] = 37] = "left";
+    vk_Keys[vk_Keys["right"] = 39] = "right";
+    vk_Keys[vk_Keys["w"] = 87] = "w";
+    vk_Keys[vk_Keys["s"] = 83] = "s";
+    vk_Keys[vk_Keys["a"] = 65] = "a";
+    vk_Keys[vk_Keys["d"] = 68] = "d";
+  })(vk_Keys = InputManager.vk_Keys || (InputManager.vk_Keys = {}));
+})(InputManager = exports.InputManager || (exports.InputManager = {}));
+},{}],"src/GameLoop.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42440,93 +42494,67 @@ Object.defineProperty(exports, "__esModule", {
 
 var PIXI = __importStar(require("pixi.js"));
 
-var GameScene_1 = require("../stages/GameScene");
+var GameObject_1 = require("./engine/components/GameObject");
 
-var GameManager = /*#__PURE__*/function () {
-  function GameManager() {
-    _classCallCheck(this, GameManager);
-  }
+var InputManager_1 = require("./engine/components/InputManager");
 
-  _createClass(GameManager, [{
-    key: "update",
-    value: function update() {}
-  }, {
-    key: "createStage",
-    value: function createStage() {
-      this.stage = new PIXI.Container();
-      this.gameScene = new GameScene_1.GameScene();
-      this.stage.addChild(this.gameScene.getStage());
-      return this.stage;
-    }
-  }, {
-    key: "getStage",
-    value: function getStage() {
-      return this.stage;
-    }
-  }]);
+var GameLoop = /*#__PURE__*/function () {
+  function GameLoop(rendered) {
+    _classCallCheck(this, GameLoop);
 
-  return GameManager;
-}();
-
-exports.GameManager = GameManager;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","../stages/GameScene":"src/engine/stages/GameScene.ts"}],"src/GameLoop.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var __importStar = this && this.__importStar || function (mod) {
-  if (mod && mod.__esModule) return mod;
-  var result = {};
-  if (mod != null) for (var k in mod) {
-    if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-  }
-  result["default"] = mod;
-  return result;
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var PIXI = __importStar(require("pixi.js"));
-
-var GameManager_1 = require("./engine/components/GameManager");
-
-var Game = /*#__PURE__*/function () {
-  function Game(rendered) {
-    _classCallCheck(this, Game);
-
+    this.vk_Keys = InputManager_1.InputManager.vk_Keys;
+    this.inputManager = new InputManager_1.InputManager(document.querySelector("#mouseInput"), document.querySelector("#keyboardInput"));
+    this.gameObjects = new Map();
     this.renderer = rendered;
-    this.gameManager = new GameManager_1.GameManager();
+    this.rootStage = new PIXI.Container();
+    this.fps = 0;
   }
 
-  _createClass(Game, [{
+  _createClass(GameLoop, [{
+    key: "setupGame",
+    value: function setupGame() {
+      this.gameObjects.set("player", new GameObject_1.GameObject(this.rootStage, 0, 0, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+    }
+  }, {
     key: "update",
     value: function update() {
-      this.gameManager.update();
+      var vk_Keys = this.vk_Keys;
+      var inputManager = this.inputManager;
+
+      var _player = this.getGameObject("player");
+
+      var speed = 5,
+          hsp = 0,
+          vsp = 0;
+      if (inputManager.keyDown(vk_Keys.left)) hsp = -1;
+      if (inputManager.keyDown(vk_Keys.right)) hsp = 1;
+      if (inputManager.keyDown(vk_Keys.up)) vsp = -1;
+      if (inputManager.keyDown(vk_Keys.down)) vsp = 1;
+      hsp *= speed;
+      vsp *= speed;
+      console.log(hsp, vsp);
+      _player.x += hsp;
+      _player.y += vsp;
     }
   }, {
     key: "render",
     value: function render() {
-      var rootStage = new PIXI.Container();
-      [this.gameManager].map(function (element) {
-        return element.getStage();
-      }).forEach(function (stage) {
-        return rootStage.addChild(stage);
-      });
-      this.renderer.render(rootStage);
+      this.renderer.render(this.rootStage);
+    }
+  }, {
+    key: "getGameObject",
+    value: function getGameObject(object) {
+      var _return = undefined;
+      if (this.gameObjects.has(object)) _return = this.gameObjects.get(object);
+      return _return;
     }
   }]);
 
-  return Game;
+  return GameLoop;
 }();
 
-exports.Game = Game;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameManager":"src/engine/components/GameManager.ts"}],"src/main.ts":[function(require,module,exports) {
+exports.GameLoop = GameLoop;
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameObject":"src/engine/components/GameObject.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -42549,11 +42577,15 @@ var GameProperties_1 = require("./utilities/GameProperties");
 
 var GameLoop_1 = require("./GameLoop");
 
+window.onload = function () {
+  return onLoad();
+};
+
 function onLoad() {
   var loader = PIXI.loader;
   loader.add("player", "player.png");
-  loader.onProgress.add(showProgress);
-  loader.onError.add(reportError);
+  loader.onProgress.add(showLoaderProgress);
+  loader.onError.add(reportLoaderError);
   loader.onComplete.add(setup);
   var spriteResources = loader.resources;
   loader.load(function (loader, resources) {
@@ -42565,10 +42597,15 @@ function onLoad() {
       backgroundColor: 0xAAAAAA,
       resolution: 1
     };
-    var renderer = PIXI.autoDetectRenderer(GameProperties_1.GameProperties.levelWidth, GameProperties_1.GameProperties.levelHeight, rendererOptions);
+    var app = PIXI.autoDetectRenderer(GameProperties_1.GameProperties.levelWidth, GameProperties_1.GameProperties.levelHeight, rendererOptions);
     var mainGameDiv = document.querySelector("#display");
-    if (mainGameDiv != null) mainGameDiv.appendChild(renderer.view);else console.error("No 'display' div found in html");
-    gameLoop(new GameLoop_1.Game(renderer, PIXI.loader));
+    if (mainGameDiv != null) mainGameDiv.appendChild(app.view);else console.error("No 'display' div found in html");
+
+    var _gameLoop = new GameLoop_1.GameLoop(app);
+
+    _gameLoop.setupGame();
+
+    gameLoop(_gameLoop);
   }
 
   function gameLoop(game) {
@@ -42580,17 +42617,13 @@ function onLoad() {
   }
 }
 
-function showProgress(e) {
+function showLoaderProgress(e) {
   console.log(e.progress);
 }
 
-function reportError(e) {
+function reportLoaderError(e) {
   console.error("ERROR: " + e.message);
 }
-
-window.onload = function () {
-  return onLoad();
-};
 },{"pixi.js":"node_modules/pixi.js/lib/index.js","./utilities/GameProperties":"src/utilities/GameProperties.ts","./GameLoop":"src/GameLoop.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -42619,7 +42652,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50750" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58750" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

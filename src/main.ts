@@ -2,9 +2,11 @@ import * as PIXI from "pixi.js"
 import Sprite = PIXI.Sprite;
 
 import {GameProperties} from "./utilities/GameProperties";
-import {Game} from "./GameLoop";
+import {GameLoop} from "./GameLoop";
 
 import RenderOptions = PIXI.RendererOptions;
+
+window.onload = () => onLoad();
 
 function onLoad(): void {
 
@@ -14,8 +16,8 @@ function onLoad(): void {
     loader
         .add("player", "player.png");//"./images/player.png"
         
-    loader.onProgress.add(showProgress);
-    loader.onError.add(reportError);
+    loader.onProgress.add(showLoaderProgress);
+    loader.onError.add(reportLoaderError);
     loader.onComplete.add(setup);
 
     let spriteResources = loader.resources;
@@ -33,7 +35,7 @@ function onLoad(): void {
             resolution: 1,
         }
 
-        let renderer = PIXI.autoDetectRenderer(
+        let app = PIXI.autoDetectRenderer(
             GameProperties.levelWidth,
             GameProperties.levelHeight,
             rendererOptions
@@ -42,7 +44,7 @@ function onLoad(): void {
         let mainGameDiv = document.querySelector("#display");
 
         if (mainGameDiv != null)
-            mainGameDiv.appendChild(renderer.view);
+            mainGameDiv.appendChild(app.view);
         else
             console.error("No 'display' div found in html");
 
@@ -50,13 +52,18 @@ function onLoad(): void {
         // player.x = GameProperties.levelWidth / 2;
         // player.y = GameProperties.levelHeight / 2;
         // player.anchor.set(0.5);
-        // renderer.stage.addChild(player);
+        // app.stage.addChild(player);
 
-        gameLoop(new Game(renderer, PIXI.loader));
+        // Start the game
+        let _gameLoop = new GameLoop(app);
+
+        _gameLoop.setupGame();
+        gameLoop(_gameLoop);
+        
         //console.log(player)
     }
 
-    function gameLoop(game: Game): void {
+    function gameLoop(game: GameLoop): void {
 
         requestAnimationFrame(() => gameLoop(game));
         game.update();
@@ -64,14 +71,13 @@ function onLoad(): void {
     }
 }
 
-function showProgress(e: any): void {
+function showLoaderProgress(e: any): void {
 
     console.log(e.progress);
 }
 
-function reportError(e: any): void {
+function reportLoaderError(e: any): void {
 
     console.error("ERROR: " + e.message);
 }
 
-window.onload = () => onLoad();

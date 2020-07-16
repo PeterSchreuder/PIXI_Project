@@ -2,13 +2,40 @@ import * as PIXI from "pixi.js"
 
 export class GameObject {
 
-    private sprite: PIXI.Sprite;
+    private _sprite: PIXI.Sprite;
 
-    constructor(stage: PIXI.Container, x: number, y: number, sprite: PIXI.Sprite)
+    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite)
     {
-        this.sprite = sprite;
-        this.sprite.x = x;
-        this.sprite.y = y;
-        stage.addChild(this.sprite);
+        this._sprite = _sprite;
+        this._sprite.x = _x;
+        this._sprite.y = _y;
+        _stage.addChild(this._sprite);
     }
+
+    public moveDirection(): void {
+        
+    }
+
+    //#region - Getters & Setters
+
+    //- Positions
+    get x(): number { return this._sprite.x; }
+
+    set x(_value: number) { this._sprite.x = _value;}
+
+    get y(): number { return this._sprite.y; }
+
+    set y(_value: number) { this._sprite.y = _value; }
+
+    //- Visuals
+    get sprite(): PIXI.Sprite { return this._sprite; }
+
+    set sprite(_value: PIXI.Sprite) { this._sprite = _value; }
+
+    get tint(): number { return this._sprite.tint; }
+
+    set tint(_value: number) { this._sprite.tint = _value; }
+
+    //#endregion
+
 }
