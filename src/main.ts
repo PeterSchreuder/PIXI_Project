@@ -33,6 +33,7 @@ function onLoad(): void {
         let rendererOptions: RenderOptions = {
             backgroundColor: 0xAAAAAA,
             resolution: 1,
+            
         }
 
         let app = PIXI.autoDetectRenderer(
@@ -42,7 +43,7 @@ function onLoad(): void {
         );
 
         let mainGameDiv = document.querySelector("#display");
-        
+
         if (mainGameDiv != null)
             mainGameDiv.appendChild(app.view);
         else

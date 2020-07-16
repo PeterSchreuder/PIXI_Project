@@ -42426,6 +42426,7 @@ var InputManager = /*#__PURE__*/function () {
   function InputManager(keyboardElement, mouseElement, renderer) {
     _classCallCheck(this, InputManager);
 
+    this.renderer = renderer;
     this.keys = new Map();
     var keys = this.keys;
     this.mouse = {
@@ -42450,9 +42451,8 @@ var InputManager = /*#__PURE__*/function () {
     mouseElement.addEventListener("mousemove", setMousePosition);
 
     function setMousePosition(e) {
-      var rect = renderer.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
+      mouse.x = renderer.plugins.interaction.mouse.global.x;
+      mouse.y = renderer.plugins.interaction.mouse.global.y;
     }
   }
 
@@ -42527,9 +42527,9 @@ var UsefullFunctions = /*#__PURE__*/function () {
   _createClass(UsefullFunctions, [{
     key: "lookTowardPoint",
     value: function lookTowardPoint(_x, _y, _x2, _y2) {
-      var _angleTemp = Math.atan2(_y2 - _y, _x2 - _x);
-
-      return _angleTemp;
+      var dist_Y = _y - _y2;
+      var dist_X = _x - _x2;
+      return Math.atan2(dist_Y, dist_X);
     }
   }, {
     key: "lengthDirX",
@@ -42590,23 +42590,25 @@ var InputManager_1 = require("./engine/components/InputManager");
 
 var UsefullFunctions_1 = require("./engine/components/UsefullFunctions");
 
+var GameProperties_1 = require("./utilities/GameProperties");
+
 var GameLoop = /*#__PURE__*/function () {
   function GameLoop(rendered) {
     _classCallCheck(this, GameLoop);
 
     this.vk_Keys = InputManager_1.InputManager.vk_Keys;
-    this.inputManager = new InputManager_1.InputManager(document.querySelector("#keyboardInput"), document.querySelector("#display"), document.getElementsByTagName("canvas")[0]);
     this.usefullFunctions = new UsefullFunctions_1.UsefullFunctions();
     this.gameObjects = new Map();
     this.renderer = rendered;
     this.rootStage = new PIXI.Container();
     this.fps = 0;
+    this.inputManager = new InputManager_1.InputManager(document.querySelector("#keyboardInput"), document.querySelector("#display"), this.renderer);
   }
 
   _createClass(GameLoop, [{
     key: "setupGame",
     value: function setupGame() {
-      this.gameObjects.set("player", new GameObject_1.GameObject(this.rootStage, 50, 50, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+      this.gameObjects.set("player", new GameObject_1.GameObject(this.rootStage, GameProperties_1.GameProperties.levelWidth / 2, GameProperties_1.GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
     }
   }, {
     key: "update",
@@ -42627,8 +42629,8 @@ var GameLoop = /*#__PURE__*/function () {
       vsp *= speed;
       _player.x += hsp;
       _player.y += vsp;
-      _player.rotation = this.usefullFunctions.lookTowardPoint(inputManager.mouseX(), inputManager.mouseY(), 0, 0);
-      console.log(_player.rotation);
+      _player.rotation = this.usefullFunctions.lookTowardPoint(_player.x, _player.y, inputManager.mouseX(), inputManager.mouseY());
+      console.log(this.renderer.plugins.interaction.mouse.global.x);
     }
   }, {
     key: "render",
@@ -42648,7 +42650,7 @@ var GameLoop = /*#__PURE__*/function () {
 }();
 
 exports.GameLoop = GameLoop;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameObject":"src/engine/components/GameObject.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./engine/components/UsefullFunctions":"src/engine/components/UsefullFunctions.ts"}],"src/main.ts":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameObject":"src/engine/components/GameObject.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./engine/components/UsefullFunctions":"src/engine/components/UsefullFunctions.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {

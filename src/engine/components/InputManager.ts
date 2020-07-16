@@ -2,8 +2,12 @@ export class InputManager {
 
     private keys: Map<number, boolean>;
     private mouse: {x: number, y: number};
+    private renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
 
-    constructor(keyboardElement: any, mouseElement: any, renderer: Element) {
+    constructor(keyboardElement: any, mouseElement: any, renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer) {
+
+        this.renderer = renderer;
+
 
         this.keys = new Map<number, boolean>();
         let keys = this.keys;
@@ -22,7 +26,7 @@ export class InputManager {
 
             keys.set(_keyCode, true);
         }
-
+        //this.renderer.plugins.interaction.mouse.global.x
         function setKeyUp(e: KeyboardEvent): void {
 
             let _keyCode = e.keyCode;
@@ -35,10 +39,10 @@ export class InputManager {
         mouseElement.addEventListener("mousemove", setMousePosition);
 
         function setMousePosition(e: MouseEvent): void {
-            var rect = renderer.getBoundingClientRect();
-            
-            mouse.x = e.clientX - rect.left;
-            mouse.y = e.clientY - rect.top;
+            //var rect = renderer.getBoundingClientRect();
+
+            mouse.x = renderer.plugins.interaction.mouse.global.x;//e.clientX - rect.left;
+            mouse.y = renderer.plugins.interaction.mouse.global.y;//e.clientY - rect.top;
         }
     }
 

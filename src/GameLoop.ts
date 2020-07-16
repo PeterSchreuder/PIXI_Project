@@ -6,6 +6,7 @@ import * as PIXI from "pixi.js"
 import { GameObject } from "./engine/components/GameObject";
 import { InputManager } from "./engine/components/InputManager";
 import { UsefullFunctions } from "./engine/components/UsefullFunctions";
+import {GameProperties} from "./utilities/GameProperties"
 
 export class GameLoop {
 
@@ -15,7 +16,7 @@ export class GameLoop {
     //private readonly gameManager: GameManager;
     private rootStage: PIXI.Container;
     public fps: number;
-    private inputManager = new InputManager(document.querySelector("#keyboardInput"), document.querySelector("#display"), document.getElementsByTagName("canvas")[0]);
+    private inputManager: InputManager;
     private usefullFunctions = new UsefullFunctions();
 
     private gameObjects = new Map<string, GameObject>();
@@ -27,11 +28,13 @@ export class GameLoop {
         this.rootStage = new PIXI.Container();
         this.fps = 0;
 
+        this.inputManager = new InputManager(document.querySelector("#keyboardInput"), document.querySelector("#display"), this.renderer);
+
     }
 
     public setupGame(): void {
 
-        this.gameObjects.set("player", new GameObject(this.rootStage, 50, 50, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+        this.gameObjects.set("player", new GameObject(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
     }
 
     public update(): void {
@@ -53,10 +56,11 @@ export class GameLoop {
         _player.x += hsp;
         _player.y += vsp;
 
-        _player.rotation = this.usefullFunctions.lookTowardPoint(inputManager.mouseX(), inputManager.mouseY(), 0, 0);
+        _player.rotation = this.usefullFunctions.lookTowardPoint(_player.x, _player.y, inputManager.mouseX(), inputManager.mouseY());
         //_player.rotation += 0.01;
         //_player.rotation = 6.25
-        console.log(_player.rotation)
+        //console.log(_player.rotation)
+        console.log(this.renderer.plugins.interaction.mouse.global.x);
     }
 
     public render(): void {
