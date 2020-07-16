@@ -17,7 +17,6 @@
     "lodash": "^4.17.19",
     "pixi": "^0.3.1",
     "pixi.js": "^4.8.1",
-    "strongly-typed-events": "^1.6.8",
     "utilities": "^1.0.5"
   },
   "devDependencies": {

@@ -42334,6 +42334,25 @@ var GameProperties;
   GameProperties[GameProperties["levelWidth"] = 544] = "levelWidth";
   GameProperties[GameProperties["levelHeight"] = 544] = "levelHeight";
 })(GameProperties = exports.GameProperties || (exports.GameProperties = {}));
+},{}],"src/engine/components/GameObject.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var GameObject = function GameObject(stage, x, y, sprite) {
+  _classCallCheck(this, GameObject);
+
+  this.sprite = sprite;
+  this.sprite.x = x;
+  this.sprite.y = y;
+  stage.addChild(this.sprite);
+};
+
+exports.GameObject = GameObject;
 },{}],"src/engine/stages/GameScene.ts":[function(require,module,exports) {
 "use strict";
 
@@ -42359,11 +42378,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var PIXI = __importStar(require("pixi.js"));
 
+var GameObject_1 = require("../components/GameObject");
+
 var GameScene = /*#__PURE__*/function () {
-  function GameScene(sprites) {
+  function GameScene() {
     _classCallCheck(this, GameScene);
 
-    this.spriteList = sprites;
+    this.spriteList = PIXI.loader.resources;
     console.log("peter", this.spriteList);
     this.objects = [];
     this.gameScene = new PIXI.Container();
@@ -42375,6 +42396,7 @@ var GameScene = /*#__PURE__*/function () {
     key: "buildScene",
     value: function buildScene() {
       this.gameScene = new PIXI.Container();
+      var player = new GameObject_1.GameObject(this.gameScene, 0, 0, this.spriteList.player.texture);
       return this.gameScene;
     }
   }, {
@@ -42393,7 +42415,7 @@ var GameScene = /*#__PURE__*/function () {
 }();
 
 exports.GameScene = GameScene;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js"}],"src/engine/components/GameManager.ts":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","../components/GameObject":"src/engine/components/GameObject.ts"}],"src/engine/components/GameManager.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42421,20 +42443,24 @@ var PIXI = __importStar(require("pixi.js"));
 var GameScene_1 = require("../stages/GameScene");
 
 var GameManager = /*#__PURE__*/function () {
-  function GameManager(sprites) {
+  function GameManager() {
     _classCallCheck(this, GameManager);
-
-    this.spriteList = sprites;
   }
 
   _createClass(GameManager, [{
     key: "update",
     value: function update() {}
   }, {
+    key: "createStage",
+    value: function createStage() {
+      this.stage = new PIXI.Container();
+      this.gameScene = new GameScene_1.GameScene();
+      this.stage.addChild(this.gameScene.getStage());
+      return this.stage;
+    }
+  }, {
     key: "getStage",
     value: function getStage() {
-      this.stage = new PIXI.Container();
-      this.gameScene = new GameScene_1.GameScene(this.spriteList);
       return this.stage;
     }
   }]);
@@ -42471,12 +42497,11 @@ var PIXI = __importStar(require("pixi.js"));
 var GameManager_1 = require("./engine/components/GameManager");
 
 var Game = /*#__PURE__*/function () {
-  function Game(rendered, sprites) {
+  function Game(rendered) {
     _classCallCheck(this, Game);
 
     this.renderer = rendered;
-    this.spriteList = sprites;
-    this.gameManager = new GameManager_1.GameManager(sprites);
+    this.gameManager = new GameManager_1.GameManager();
   }
 
   _createClass(Game, [{
@@ -42594,7 +42619,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62550" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50750" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

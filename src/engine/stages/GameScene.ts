@@ -13,11 +13,10 @@ export class GameScene implements RenderableElement {
     private stage: Container;
     private gameScene: Container;
     private objects: Array<any>;
-    private spriteList: PIXI.loaders.Loader;
+    private spriteList = PIXI.loader.resources;
 
-    constructor(sprites: PIXI.loaders.Loader)
+    constructor()
     {
-        this.spriteList = sprites;
         console.log("peter", this.spriteList)
         this.objects = [];
         this.gameScene = new PIXI.Container();
@@ -31,7 +30,7 @@ export class GameScene implements RenderableElement {
         this.gameScene = new PIXI.Container();
 
         //- Create objects
-        //let player = new GameObject(this.getStage(), 0, 0, this.spriteList.resources.player.texture);
+        let player = new GameObject(this.gameScene, 0, 0, this.spriteList.player.texture);
 
         return this.gameScene;
 

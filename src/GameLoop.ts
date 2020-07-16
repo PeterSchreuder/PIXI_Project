@@ -7,13 +7,11 @@ export class Game {
 
     private readonly renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
     private readonly gameManager: GameManager;
-    private readonly spriteList: PIXI.loaders.Loader;
 
-    constructor (rendered: PIXI.CanvasRenderer | PIXI.WebGLRenderer, sprites: PIXI.loaders.Loader) {
+    constructor (rendered: PIXI.CanvasRenderer | PIXI.WebGLRenderer) {
 
         this.renderer = rendered;
-        this.spriteList = sprites;
-        this.gameManager = new GameManager(sprites);
+        this.gameManager = new GameManager();
 
     }
 

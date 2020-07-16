@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js"
 
 export interface RenderableElement {
-    getStage(): PIXI.Container;
+    createStage(): PIXI.Container;
+    getStage(): PIXI.Container | undefined;
 }
