@@ -5,6 +5,7 @@ import * as PIXI from "pixi.js"
 //import {RenderableElement} from "./utilities/RenderableElement";
 import { GameObject } from "./engine/components/GameObject";
 import { InputManager } from "./engine/components/InputManager";
+import { UsefullFunctions } from "./engine/components/UsefullFunctions";
 
 export class GameLoop {
 
@@ -14,7 +15,8 @@ export class GameLoop {
     //private readonly gameManager: GameManager;
     private rootStage: PIXI.Container;
     public fps: number;
-    private inputManager = new InputManager(document.querySelector("#mouseInput"), document.querySelector("#keyboardInput"));
+    private inputManager = new InputManager(document.querySelector("#keyboardInput"), document.querySelector("#display"), document.getElementsByTagName("canvas")[0]);
+    private usefullFunctions = new UsefullFunctions();
 
     private gameObjects = new Map<string, GameObject>();
 
@@ -29,7 +31,7 @@ export class GameLoop {
 
     public setupGame(): void {
 
-        this.gameObjects.set("player", new GameObject(this.rootStage, 0, 0, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+        this.gameObjects.set("player", new GameObject(this.rootStage, 50, 50, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
     }
 
     public update(): void {
@@ -47,10 +49,14 @@ export class GameLoop {
         
         hsp *= speed;
         vsp *= speed;
-        console.log(hsp, vsp)
+        
         _player.x += hsp;
         _player.y += vsp;
 
+        _player.rotation = this.usefullFunctions.lookTowardPoint(inputManager.mouseX(), inputManager.mouseY(), 0, 0);
+        //_player.rotation += 0.01;
+        //_player.rotation = 6.25
+        console.log(_player.rotation)
     }
 
     public render(): void {

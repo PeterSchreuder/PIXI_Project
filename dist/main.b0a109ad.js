@@ -42354,6 +42354,8 @@ var GameObject = /*#__PURE__*/function () {
     this._sprite = _sprite;
     this._sprite.x = _x;
     this._sprite.y = _y;
+    this.sprite.anchor.set(0.5);
+    this.sprite.rotation = 90;
 
     _stage.addChild(this._sprite);
   }
@@ -42376,6 +42378,14 @@ var GameObject = /*#__PURE__*/function () {
     },
     set: function set(_value) {
       this._sprite.y = _value;
+    }
+  }, {
+    key: "rotation",
+    get: function get() {
+      return this._sprite.rotation;
+    },
+    set: function set(_value) {
+      this._sprite.rotation = _value;
     }
   }, {
     key: "sprite",
@@ -42413,17 +42423,22 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var InputManager = /*#__PURE__*/function () {
-  function InputManager(keyboardElement, mouseElement) {
+  function InputManager(keyboardElement, mouseElement, renderer) {
     _classCallCheck(this, InputManager);
 
     this.keys = new Map();
     var keys = this.keys;
-    console.log(this.keys);
-    window.addEventListener("keydown", setKeyDown);
-    window.addEventListener("keyup", setKeyUp);
+    this.mouse = {
+      x: 0,
+      y: 0
+    };
+    var mouse = this.mouse;
+    keyboardElement.addEventListener("keydown", setKeyDown);
+    keyboardElement.addEventListener("keyup", setKeyUp);
 
     function setKeyDown(e) {
       var _keyCode = e.keyCode;
+      console.log(_keyCode);
       keys.set(_keyCode, true);
     }
 
@@ -42431,9 +42446,31 @@ var InputManager = /*#__PURE__*/function () {
       var _keyCode = e.keyCode;
       keys.set(_keyCode, false);
     }
+
+    mouseElement.addEventListener("mousemove", setMousePosition);
+
+    function setMousePosition(e) {
+      var rect = renderer.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    }
   }
 
   _createClass(InputManager, [{
+    key: "mouseX",
+    value: function mouseX() {
+      var _return = 0;
+      _return = this.mouse.x;
+      return _return;
+    }
+  }, {
+    key: "mouseY",
+    value: function mouseY() {
+      var _return = 0;
+      _return = this.mouse.y;
+      return _return;
+    }
+  }, {
     key: "keyDown",
     value: function keyDown(_value) {
       var _return = false;
@@ -42469,6 +42506,59 @@ exports.InputManager = InputManager;
     vk_Keys[vk_Keys["d"] = 68] = "d";
   })(vk_Keys = InputManager.vk_Keys || (InputManager.vk_Keys = {}));
 })(InputManager = exports.InputManager || (exports.InputManager = {}));
+},{}],"src/engine/components/UsefullFunctions.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var UsefullFunctions = /*#__PURE__*/function () {
+  function UsefullFunctions() {
+    _classCallCheck(this, UsefullFunctions);
+  }
+
+  _createClass(UsefullFunctions, [{
+    key: "lookTowardPoint",
+    value: function lookTowardPoint(_x, _y, _x2, _y2) {
+      var _angleTemp = Math.atan2(_y2 - _y, _x2 - _x);
+
+      return _angleTemp;
+    }
+  }, {
+    key: "lengthDirX",
+    value: function lengthDirX(direction, length) {
+      var radAngle = this.toRadians(direction);
+      return Math.cos(radAngle) * length;
+    }
+  }, {
+    key: "lengthDirY",
+    value: function lengthDirY(direction, length) {
+      var radAngle = this.toRadians(direction);
+      return Math.sin(radAngle) * length;
+    }
+  }, {
+    key: "toRadians",
+    value: function toRadians(degrees) {
+      return degrees * (Math.PI / 180);
+    }
+  }, {
+    key: "toDegrees",
+    value: function toDegrees(radians) {
+      return radians * (180 / Math.PI);
+    }
+  }]);
+
+  return UsefullFunctions;
+}();
+
+exports.UsefullFunctions = UsefullFunctions;
 },{}],"src/GameLoop.ts":[function(require,module,exports) {
 "use strict";
 
@@ -42498,12 +42588,15 @@ var GameObject_1 = require("./engine/components/GameObject");
 
 var InputManager_1 = require("./engine/components/InputManager");
 
+var UsefullFunctions_1 = require("./engine/components/UsefullFunctions");
+
 var GameLoop = /*#__PURE__*/function () {
   function GameLoop(rendered) {
     _classCallCheck(this, GameLoop);
 
     this.vk_Keys = InputManager_1.InputManager.vk_Keys;
-    this.inputManager = new InputManager_1.InputManager(document.querySelector("#mouseInput"), document.querySelector("#keyboardInput"));
+    this.inputManager = new InputManager_1.InputManager(document.querySelector("#keyboardInput"), document.querySelector("#display"), document.getElementsByTagName("canvas")[0]);
+    this.usefullFunctions = new UsefullFunctions_1.UsefullFunctions();
     this.gameObjects = new Map();
     this.renderer = rendered;
     this.rootStage = new PIXI.Container();
@@ -42513,7 +42606,7 @@ var GameLoop = /*#__PURE__*/function () {
   _createClass(GameLoop, [{
     key: "setupGame",
     value: function setupGame() {
-      this.gameObjects.set("player", new GameObject_1.GameObject(this.rootStage, 0, 0, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+      this.gameObjects.set("player", new GameObject_1.GameObject(this.rootStage, 50, 50, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
     }
   }, {
     key: "update",
@@ -42532,9 +42625,10 @@ var GameLoop = /*#__PURE__*/function () {
       if (inputManager.keyDown(vk_Keys.down)) vsp = 1;
       hsp *= speed;
       vsp *= speed;
-      console.log(hsp, vsp);
       _player.x += hsp;
       _player.y += vsp;
+      _player.rotation = this.usefullFunctions.lookTowardPoint(inputManager.mouseX(), inputManager.mouseY(), 0, 0);
+      console.log(_player.rotation);
     }
   }, {
     key: "render",
@@ -42554,7 +42648,7 @@ var GameLoop = /*#__PURE__*/function () {
 }();
 
 exports.GameLoop = GameLoop;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameObject":"src/engine/components/GameObject.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts"}],"src/main.ts":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameObject":"src/engine/components/GameObject.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./engine/components/UsefullFunctions":"src/engine/components/UsefullFunctions.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -42652,7 +42746,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58750" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53632" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

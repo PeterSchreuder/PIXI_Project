@@ -42,7 +42,7 @@ function onLoad(): void {
         );
 
         let mainGameDiv = document.querySelector("#display");
-
+        
         if (mainGameDiv != null)
             mainGameDiv.appendChild(app.view);
         else
@@ -59,7 +59,6 @@ function onLoad(): void {
 
         _gameLoop.setupGame();
         gameLoop(_gameLoop);
-        
         //console.log(player)
     }
 
