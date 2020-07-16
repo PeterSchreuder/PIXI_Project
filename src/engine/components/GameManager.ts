@@ -9,7 +9,12 @@ import {GameScene} from "../stages/GameScene";
 export class GameManager implements RenderableElement, UpdateableElement {
     
     private gameScene: GameScene;
-    private stage: PIXI.Container;
+    private stage: PIXI.Container | undefined;
+    private spriteList: PIXI.loaders.Loader;
+
+    constructor(sprites: PIXI.loaders.Loader) {
+        this.spriteList = sprites;
+    }
 
     public update(): void {
 
@@ -20,7 +25,7 @@ export class GameManager implements RenderableElement, UpdateableElement {
 
         this.stage = new PIXI.Container();
 
-
+        this.gameScene = new GameScene(this.spriteList);
 
         return this.stage;
     }

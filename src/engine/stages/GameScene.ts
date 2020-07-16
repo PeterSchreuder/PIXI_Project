@@ -5,6 +5,7 @@ import Container = PIXI.Container;
 
 //import { GameProperties } from "../../utilities/GameProperties";
 import {RenderableElement} from "../../utilities/RenderableElement";
+import { GameObject } from "../components/GameObject";
 
 
 export class GameScene implements RenderableElement {
@@ -12,9 +13,12 @@ export class GameScene implements RenderableElement {
     private stage: Container;
     private gameScene: Container;
     private objects: Array<any>;
+    private spriteList: PIXI.loaders.Loader;
 
-    constructor()
+    constructor(sprites: PIXI.loaders.Loader)
     {
+        this.spriteList = sprites;
+        console.log("peter", this.spriteList)
         this.objects = [];
         this.gameScene = new PIXI.Container();
 
@@ -27,7 +31,7 @@ export class GameScene implements RenderableElement {
         this.gameScene = new PIXI.Container();
 
         //- Create objects
-        
+        //let player = new GameObject(this.getStage(), 0, 0, this.spriteList.resources.player.texture);
 
         return this.gameScene;
 

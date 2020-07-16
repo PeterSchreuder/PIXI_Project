@@ -25,6 +25,7 @@ function onLoad(): void {
         console.log("Loaded Resources: ", resources);
     });
 
+    //- Setup the game
     function setup(): void {
 
         let rendererOptions: RenderOptions = {
@@ -51,7 +52,7 @@ function onLoad(): void {
         // player.anchor.set(0.5);
         // renderer.stage.addChild(player);
 
-        gameLoop(new Game(renderer));
+        gameLoop(new Game(renderer, PIXI.loader));
         //console.log(player)
     }
 
