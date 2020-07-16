@@ -42334,7 +42334,109 @@ var GameProperties;
   GameProperties[GameProperties["levelWidth"] = 544] = "levelWidth";
   GameProperties[GameProperties["levelHeight"] = 544] = "levelHeight";
 })(GameProperties = exports.GameProperties || (exports.GameProperties = {}));
-},{}],"src/app.ts":[function(require,module,exports) {
+},{}],"src/engine/components/GameManager.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+  }
+  result["default"] = mod;
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var PIXI = __importStar(require("pixi.js"));
+
+var GameManager = /*#__PURE__*/function () {
+  function GameManager() {
+    _classCallCheck(this, GameManager);
+  }
+
+  _createClass(GameManager, [{
+    key: "update",
+    value: function update() {}
+  }, {
+    key: "getStage",
+    value: function getStage() {
+      this.stage = new PIXI.Container();
+      return this.stage;
+    }
+  }]);
+
+  return GameManager;
+}();
+
+exports.GameManager = GameManager;
+},{"pixi.js":"node_modules/pixi.js/lib/index.js"}],"src/GameLoop.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+  }
+  result["default"] = mod;
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var PIXI = __importStar(require("pixi.js"));
+
+var GameManager_1 = require("./engine/components/GameManager");
+
+var Game = /*#__PURE__*/function () {
+  function Game(rendered) {
+    _classCallCheck(this, Game);
+
+    this.renderer = rendered;
+    this.gameManager = new GameManager_1.GameManager();
+  }
+
+  _createClass(Game, [{
+    key: "update",
+    value: function update() {
+      this.gameManager.update();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var rootStage = new PIXI.Container();
+      [this.gameManager].map(function (element) {
+        return element.getStage();
+      }).forEach(function (stage) {
+        return rootStage.addChild(stage);
+      });
+      this.renderer.render(rootStage);
+    }
+  }]);
+
+  return Game;
+}();
+
+exports.Game = Game;
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameManager":"src/engine/components/GameManager.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -42355,6 +42457,8 @@ var PIXI = __importStar(require("pixi.js"));
 
 var GameProperties_1 = require("./utilities/GameProperties");
 
+var GameLoop_1 = require("./GameLoop");
+
 function onLoad() {
   var loader = PIXI.loader;
   loader.add("player", "player.png");
@@ -42371,14 +42475,18 @@ function onLoad() {
       backgroundColor: 0xAAAAAA,
       resolution: 1
     };
-    var renderer = new PIXI.Application(GameProperties_1.GameProperties.levelWidth, GameProperties_1.GameProperties.levelHeight, rendererOptions);
+    var renderer = PIXI.autoDetectRenderer(GameProperties_1.GameProperties.levelWidth, GameProperties_1.GameProperties.levelHeight, rendererOptions);
     var mainGameDiv = document.querySelector("#display");
     if (mainGameDiv != null) mainGameDiv.appendChild(renderer.view);else console.error("No 'display' div found in html");
-    var player = PIXI.Sprite.from(spriteResources.player.texture);
-    player.x = GameProperties_1.GameProperties.levelWidth / 2;
-    player.y = GameProperties_1.GameProperties.levelHeight / 2;
-    player.anchor.set(0.5);
-    renderer.stage.addChild(player);
+    gameLoop(new GameLoop_1.Game(renderer));
+  }
+
+  function gameLoop(game) {
+    requestAnimationFrame(function () {
+      return gameLoop(game);
+    });
+    game.update();
+    game.render();
   }
 }
 
@@ -42393,7 +42501,7 @@ function reportError(e) {
 window.onload = function () {
   return onLoad();
 };
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./utilities/GameProperties":"src/utilities/GameProperties.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./utilities/GameProperties":"src/utilities/GameProperties.ts","./GameLoop":"src/GameLoop.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -42597,5 +42705,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/app.ts"], null)
-//# sourceMappingURL=/app.5cec07dd.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/main.ts"], null)
+//# sourceMappingURL=/main.b0a109ad.js.map
