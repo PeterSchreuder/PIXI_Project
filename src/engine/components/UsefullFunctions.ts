@@ -5,13 +5,8 @@ export class UsefullFunctions {
     }
 
     public lookTowardPoint(_x: number, _y: number, _x2: number, _y2: number): number {
-
-        //let _angleTemp = Math.atan2(_y2 - _y, _x2 - _x);
-        //return _angleTemp;//this.toDegrees(_angleTemp);
-
-        var dist_Y = _y - _y2;
-        var dist_X = _x - _x2;
-        return Math.atan2(dist_Y,dist_X);
+        
+        return Math.atan2(_y - _y2, _x - _x2);
     }
 
     public lengthDirX(direction: number, length: number): number {
