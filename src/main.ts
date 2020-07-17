@@ -14,8 +14,7 @@ function onLoad(): void {
     let loader = PIXI.loader;
 
     loader
-        .add("player", "player.png")
-        .add("tile", "tile.png");
+        .add("player", "player.png");//"./images/player.png"
         
     loader.onProgress.add(showLoaderProgress);
     loader.onError.add(reportLoaderError);
