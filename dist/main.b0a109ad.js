@@ -42347,22 +42347,33 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var GameLoop_1 = require("../../GameLoop");
+
 var GameObject = /*#__PURE__*/function () {
   function GameObject(_stage, _x, _y, _sprite) {
     _classCallCheck(this, GameObject);
 
+    this.inputManager = GameLoop_1.GameLoop.prototype.getInputManager();
     this._sprite = _sprite;
     this._sprite.x = _x;
     this._sprite.y = _y;
     this.sprite.anchor.set(0.5);
-    this.sprite.rotation = 90;
 
     _stage.addChild(this._sprite);
+
+    console.log("peter", this._sprite.width);
   }
 
   _createClass(GameObject, [{
     key: "moveDirection",
-    value: function moveDirection() {}
+    value: function moveDirection(_direction, _speed) {
+      _direction *= Math.PI / 180;
+      this.x += Math.cos(_direction) * _speed;
+      this.y += Math.sin(_direction) * _speed;
+    }
+  }, {
+    key: "update",
+    value: function update() {}
   }, {
     key: "x",
     get: function get() {
@@ -42403,13 +42414,76 @@ var GameObject = /*#__PURE__*/function () {
     set: function set(_value) {
       this._sprite.tint = _value;
     }
+  }, {
+    key: "anchor",
+    get: function get() {
+      return {
+        x: this._sprite.anchor.x,
+        y: this._sprite.anchor.x
+      };
+    },
+    set: function set(_value) {
+      this._sprite.anchor.x = _value.x;
+      this._sprite.anchor.y = _value.y;
+    }
   }]);
 
   return GameObject;
 }();
 
 exports.GameObject = GameObject;
-},{}],"src/engine/components/InputManager.ts":[function(require,module,exports) {
+},{"../../GameLoop":"src/GameLoop.ts"}],"src/engine/components/Player.ts":[function(require,module,exports) {
+"use strict";
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var GameObject_1 = require("./GameObject");
+
+var Player = /*#__PURE__*/function (_GameObject_1$GameObj) {
+  _inherits(Player, _GameObject_1$GameObj);
+
+  var _super = _createSuper(Player);
+
+  function Player(_stage, _x, _y, _sprite) {
+    _classCallCheck(this, Player);
+
+    return _super.call(this, _stage, _x, _y, _sprite);
+  }
+
+  _createClass(Player, [{
+    key: "update",
+    value: function update() {}
+  }]);
+
+  return Player;
+}(GameObject_1.GameObject);
+
+exports.Player = Player;
+},{"./GameObject":"src/engine/components/GameObject.ts"}],"src/engine/components/InputManager.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42434,12 +42508,11 @@ var InputManager = /*#__PURE__*/function () {
       y: 0
     };
     var mouse = this.mouse;
-    keyboardElement.addEventListener("keydown", setKeyDown);
-    keyboardElement.addEventListener("keyup", setKeyUp);
+    window.addEventListener("keydown", setKeyDown);
+    window.addEventListener("keyup", setKeyUp);
 
     function setKeyDown(e) {
       var _keyCode = e.keyCode;
-      console.log(_keyCode);
       keys.set(_keyCode, true);
     }
 
@@ -42504,6 +42577,8 @@ exports.InputManager = InputManager;
     vk_Keys[vk_Keys["s"] = 83] = "s";
     vk_Keys[vk_Keys["a"] = 65] = "a";
     vk_Keys[vk_Keys["d"] = 68] = "d";
+    vk_Keys[vk_Keys["space"] = 32] = "space";
+    vk_Keys[vk_Keys["enter"] = 13] = "enter";
   })(vk_Keys = InputManager.vk_Keys || (InputManager.vk_Keys = {}));
 })(InputManager = exports.InputManager || (exports.InputManager = {}));
 },{}],"src/engine/components/UsefullFunctions.ts":[function(require,module,exports) {
@@ -42527,9 +42602,7 @@ var UsefullFunctions = /*#__PURE__*/function () {
   _createClass(UsefullFunctions, [{
     key: "lookTowardPoint",
     value: function lookTowardPoint(_x, _y, _x2, _y2) {
-      var dist_Y = _y - _y2;
-      var dist_X = _x - _x2;
-      return Math.atan2(dist_Y, dist_X);
+      return Math.atan2(_y - _y2, _x - _x2);
     }
   }, {
     key: "lengthDirX",
@@ -42559,6 +42632,144 @@ var UsefullFunctions = /*#__PURE__*/function () {
 }();
 
 exports.UsefullFunctions = UsefullFunctions;
+},{}],"src/engine/components/gridsystem/Tile.ts":[function(require,module,exports) {
+"use strict";
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var GameObject_1 = require("../GameObject");
+
+var Tile = /*#__PURE__*/function (_GameObject_1$GameObj) {
+  _inherits(Tile, _GameObject_1$GameObj);
+
+  var _super = _createSuper(Tile);
+
+  function Tile() {
+    _classCallCheck(this, Tile);
+
+    return _super.apply(this, arguments);
+  }
+
+  return Tile;
+}(GameObject_1.GameObject);
+
+exports.Tile = Tile;
+},{"../GameObject":"src/engine/components/GameObject.ts"}],"src/engine/components/gridsystem/GridSystem.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var Tile_1 = require("./Tile");
+
+var GridSystem = /*#__PURE__*/function () {
+  function GridSystem(_stage, _gridWidth, _gridHeight, _gridTileSize) {
+    _classCallCheck(this, GridSystem);
+
+    this.stage = _stage;
+    this.gridArray = new Array();
+    this.gridWidth = _gridWidth;
+    this.gridHeight = _gridHeight;
+    this.gridTileSize = _gridTileSize;
+  }
+
+  _createClass(GridSystem, [{
+    key: "gridInit",
+    value: function gridInit() {
+      var obj = null;
+
+      for (var _x = 0; _x < this.gridWidth; _x++) {
+        for (var _y = 0; _y < this.gridHeight; _y++) {
+          obj = new Tile_1.Tile(this.stage, _x * this.gridTileSize, _y * this.gridTileSize, PIXI.Sprite.from(PIXI.loader.resources.tile.texture));
+          obj.anchor = {
+            x: 0,
+            y: 0
+          };
+          this.gridArray.push(obj);
+        }
+      }
+    }
+  }]);
+
+  return GridSystem;
+}();
+
+exports.GridSystem = GridSystem;
+},{"./Tile":"src/engine/components/gridsystem/Tile.ts"}],"src/utilities/CollisionWithSprite.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var CollisionWithObject = /*#__PURE__*/function () {
+  function CollisionWithObject() {
+    _classCallCheck(this, CollisionWithObject);
+  }
+
+  _createClass(CollisionWithObject, null, [{
+    key: "collision",
+    value: function collision(col1, col2) {
+      var hit, vectorX, vectorY, combinedHalfWidths, combinedHalfHeights;
+      hit = false;
+      col1.centerX = col1.x + col1.width / 2;
+      col1.centerY = col1.y + col1.height / 2;
+      col2.centerX = col2.x + col2.width / 2;
+      col2.centerY = col2.y + col2.height / 2;
+      col1.halfWidth = col1.width / 2;
+      col1.halfHeight = col1.height / 2;
+      col2.halfWidth = col2.width / 2;
+      col2.halfHeight = col2.height / 2;
+      vectorX = col1.centerX - col2.centerX;
+      vectorY = col1.centerY - col2.centerY;
+      combinedHalfWidths = col1.halfWidth + col2.halfWidth;
+      combinedHalfHeights = col1.halfHeight + col2.halfHeight;
+
+      if (Math.abs(vectorX) < combinedHalfWidths || Math.abs(vectorY) < combinedHalfWidths) {
+        hit = true;
+      }
+
+      return hit;
+    }
+  }]);
+
+  return CollisionWithObject;
+}();
+
+exports.CollisionWithObject = CollisionWithObject;
 },{}],"src/GameLoop.ts":[function(require,module,exports) {
 "use strict";
 
@@ -42584,13 +42795,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var PIXI = __importStar(require("pixi.js"));
 
-var GameObject_1 = require("./engine/components/GameObject");
+var Player_1 = require("./engine/components/Player");
 
 var InputManager_1 = require("./engine/components/InputManager");
 
 var UsefullFunctions_1 = require("./engine/components/UsefullFunctions");
 
 var GameProperties_1 = require("./utilities/GameProperties");
+
+var GridSystem_1 = require("./engine/components/gridsystem/GridSystem");
+
+var CollisionWithSprite_1 = require("./utilities/CollisionWithSprite");
 
 var GameLoop = /*#__PURE__*/function () {
   function GameLoop(rendered) {
@@ -42602,35 +42817,46 @@ var GameLoop = /*#__PURE__*/function () {
     this.renderer = rendered;
     this.rootStage = new PIXI.Container();
     this.fps = 0;
-    this.inputManager = new InputManager_1.InputManager(document.querySelector("#keyboardInput"), document.querySelector("#display"), this.renderer);
+    this.inputManager = new InputManager_1.InputManager(document.querySelector("#display"), document.querySelector("#display"), this.renderer);
+    console.log(this.inputManager);
   }
 
   _createClass(GameLoop, [{
     key: "setupGame",
     value: function setupGame() {
-      this.gameObjects.set("player", new GameObject_1.GameObject(this.rootStage, GameProperties_1.GameProperties.levelWidth / 2, GameProperties_1.GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+      this.gridSystem = new GridSystem_1.GridSystem(this.rootStage, 17, 17, 32);
+      this.gridSystem.gridInit();
+      this.gameObjects.set("player", new Player_1.Player(this.rootStage, GameProperties_1.GameProperties.levelWidth / 2, GameProperties_1.GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+      this.gameObjects.set("player2", new Player_1.Player(this.rootStage, GameProperties_1.GameProperties.levelWidth / 2, GameProperties_1.GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
     }
   }, {
     key: "update",
     value: function update() {
+      this.gameObjects.forEach(function (obj) {
+        obj.update();
+      });
       var vk_Keys = this.vk_Keys;
       var inputManager = this.inputManager;
 
       var _player = this.getGameObject("player");
 
+      var _player2 = this.getGameObject("player2");
+
       var speed = 5,
           hsp = 0,
           vsp = 0;
-      if (inputManager.keyDown(vk_Keys.left)) hsp = -1;
-      if (inputManager.keyDown(vk_Keys.right)) hsp = 1;
-      if (inputManager.keyDown(vk_Keys.up)) vsp = -1;
-      if (inputManager.keyDown(vk_Keys.down)) vsp = 1;
+      if (inputManager.keyDown(vk_Keys.a) || inputManager.keyDown(vk_Keys.left)) hsp = -1;
+      if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) hsp = 1;
+      if (inputManager.keyDown(vk_Keys.w) || inputManager.keyDown(vk_Keys.up)) vsp = -1;
+      if (inputManager.keyDown(vk_Keys.s) || inputManager.keyDown(vk_Keys.down)) vsp = 1;
       hsp *= speed;
       vsp *= speed;
       _player.x += hsp;
       _player.y += vsp;
-      _player.rotation = this.usefullFunctions.lookTowardPoint(_player.x, _player.y, inputManager.mouseX(), inputManager.mouseY());
-      console.log(this.renderer.plugins.interaction.mouse.global.x);
+
+      if (CollisionWithSprite_1.CollisionWithObject.collision(_player, _player2)) {
+        console.log(1111111);
+      }
     }
   }, {
     key: "render",
@@ -42644,13 +42870,19 @@ var GameLoop = /*#__PURE__*/function () {
       if (this.gameObjects.has(object)) _return = this.gameObjects.get(object);
       return _return;
     }
+  }, {
+    key: "getInputManager",
+    value: function getInputManager() {
+      console.log(this.inputManager);
+      return this.inputManager;
+    }
   }]);
 
   return GameLoop;
 }();
 
 exports.GameLoop = GameLoop;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/GameObject":"src/engine/components/GameObject.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./engine/components/UsefullFunctions":"src/engine/components/UsefullFunctions.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts"}],"src/main.ts":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/Player":"src/engine/components/Player.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./engine/components/UsefullFunctions":"src/engine/components/UsefullFunctions.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts","./engine/components/gridsystem/GridSystem":"src/engine/components/gridsystem/GridSystem.ts","./utilities/CollisionWithSprite":"src/utilities/CollisionWithSprite.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -42679,7 +42911,7 @@ window.onload = function () {
 
 function onLoad() {
   var loader = PIXI.loader;
-  loader.add("player", "player.png");
+  loader.add("player", "player.png").add("tile", "tile.png");
   loader.onProgress.add(showLoaderProgress);
   loader.onError.add(reportLoaderError);
   loader.onComplete.add(setup);
@@ -42748,7 +42980,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53632" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60035" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

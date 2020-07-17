@@ -16,13 +16,12 @@ export class InputManager {
         let mouse = this.mouse;
 
         //- Keyboard events
-        keyboardElement.addEventListener("keydown", setKeyDown);
-        keyboardElement.addEventListener("keyup", setKeyUp);
+        window.addEventListener("keydown", setKeyDown);
+        window.addEventListener("keyup", setKeyUp);
 
         function setKeyDown(e: KeyboardEvent): void {
 
             let _keyCode = e.keyCode;
-            console.log(_keyCode);
 
             keys.set(_keyCode, true);
         }
@@ -68,12 +67,8 @@ export class InputManager {
         
         let _return = false;
 
-        
-
         if (this.keys.get(_value))
             _return = true;
-
-        
 
         return _return;
     }
@@ -103,5 +98,8 @@ export namespace InputManager {
         s = 83,
         a = 65,
         d = 68,
+
+        space = 32,
+        enter = 13
     }
 }
