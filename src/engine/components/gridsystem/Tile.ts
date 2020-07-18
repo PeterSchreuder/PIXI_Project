@@ -2,8 +2,15 @@ import { GameObject } from "../GameObject";
 
 export class Tile extends GameObject {
 
-    // constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite) {
+    private _occupier: GameObject | null;
 
-    //     super(_stage, _x, _y, _sprite);
-    // }
+    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite) {
+
+        super(_stage, _x, _y, _sprite);
+
+        this._occupier = null;
+    }
+
+    get occupier(): GameObject | null { return this._occupier; }
+    set occupier(_value: GameObject | null) { this._occupier = _value }
 }

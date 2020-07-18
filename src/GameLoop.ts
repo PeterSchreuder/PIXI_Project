@@ -46,6 +46,8 @@ export class GameLoop implements UpdateableElement {
         this.gridSystem = new GridSystem(this.rootStage, 17, 17, 32);
         this.gridSystem.gridInit();
 
+        //this.gridSystem.gridGetTile(5,5).x += 5
+
         this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
         this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));

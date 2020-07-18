@@ -42681,6 +42681,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -42706,11 +42710,25 @@ var Tile = /*#__PURE__*/function (_GameObject_1$GameObj) {
 
   var _super = _createSuper(Tile);
 
-  function Tile() {
+  function Tile(_stage, _x, _y, _sprite) {
+    var _this;
+
     _classCallCheck(this, Tile);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, _stage, _x, _y, _sprite);
+    _this._occupier = null;
+    return _this;
   }
+
+  _createClass(Tile, [{
+    key: "occupier",
+    get: function get() {
+      return this._occupier;
+    },
+    set: function set(_value) {
+      this._occupier = _value;
+    }
+  }]);
 
   return Tile;
 }(GameObject_1.GameObject);
@@ -42736,7 +42754,7 @@ var GridSystem = /*#__PURE__*/function () {
     _classCallCheck(this, GridSystem);
 
     this.stage = _stage;
-    this.gridArray = new Array();
+    this.gridArray = [];
     this.gridWidth = _gridWidth;
     this.gridHeight = _gridHeight;
     this.gridTileSize = _gridTileSize;
@@ -42748,15 +42766,22 @@ var GridSystem = /*#__PURE__*/function () {
       var obj = null;
 
       for (var _x = 0; _x < this.gridWidth; _x++) {
+        this.gridArray[_x] = [];
+
         for (var _y = 0; _y < this.gridHeight; _y++) {
           obj = new Tile_1.Tile(this.stage, _x * this.gridTileSize, _y * this.gridTileSize, PIXI.Sprite.from(PIXI.loader.resources.tile.texture));
           obj.anchor = {
             x: 0,
             y: 0
           };
-          this.gridArray.push(obj);
+          this.gridArray[_x][_y] = obj;
         }
       }
+    }
+  }, {
+    key: "gridGetTile",
+    value: function gridGetTile(_x, _y) {
+      return this.gridArray[_x][_y];
     }
   }]);
 
@@ -43025,7 +43050,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50109" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54735" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
