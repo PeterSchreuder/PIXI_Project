@@ -42354,14 +42354,26 @@ var GameObject = /*#__PURE__*/function () {
     _classCallCheck(this, GameObject);
 
     this.inputManager = GameLoop_1.GameLoop.prototype.getInputManager();
+    this._stage = _stage;
     this._sprite = _sprite;
+    this._x = _x;
+    this._y = _y;
+    this._rotation = this._sprite.rotation;
+    this._currentDirection = this._rotation;
+    this._nextDirection = this._rotation;
+    this._width = this._sprite.width;
+    this._height = this._sprite.width;
+    this._anchor = {
+      x: this._sprite.anchor.x,
+      y: this._sprite.anchor.y
+    };
+    this._tint = this._sprite.tint;
     this._sprite.x = _x;
     this._sprite.y = _y;
-    this.sprite.anchor.set(0.5);
 
-    _stage.addChild(this._sprite);
+    this._sprite.anchor.set(0.5);
 
-    console.log("peter", this._sprite.width);
+    this._stage.addChild(this._sprite);
   }
 
   _createClass(GameObject, [{
@@ -42375,27 +42387,36 @@ var GameObject = /*#__PURE__*/function () {
     key: "update",
     value: function update() {}
   }, {
+    key: "updateSprite",
+    value: function updateSprite(_variable, _variableSprite, _value) {
+      _variableSprite = _value;
+      _variable = _value;
+    }
+  }, {
     key: "x",
     get: function get() {
-      return this._sprite.x;
+      return this._x;
     },
     set: function set(_value) {
+      this._x = _value;
       this._sprite.x = _value;
     }
   }, {
     key: "y",
     get: function get() {
-      return this._sprite.y;
+      return this._y;
     },
     set: function set(_value) {
+      this._y = _value;
       this._sprite.y = _value;
     }
   }, {
     key: "rotation",
     get: function get() {
-      return this._sprite.rotation;
+      return this._rotation;
     },
     set: function set(_value) {
+      this._rotation = _value;
       this._sprite.rotation = _value;
     }
   }, {
@@ -42404,25 +42425,46 @@ var GameObject = /*#__PURE__*/function () {
       return this._sprite;
     },
     set: function set(_value) {
+      this._stage.removeChild(this._sprite);
+
       this._sprite = _value;
+
+      this._stage.addChild(this._sprite);
+    }
+  }, {
+    key: "width",
+    get: function get() {
+      return this._width;
+    },
+    set: function set(_value) {
+      this._rotation = _value;
+      this._sprite.rotation = _value;
+    }
+  }, {
+    key: "height",
+    get: function get() {
+      return this._height;
+    },
+    set: function set(_value) {
+      this._rotation = _value;
+      this._sprite.rotation = _value;
     }
   }, {
     key: "tint",
     get: function get() {
-      return this._sprite.tint;
+      return this._tint;
     },
     set: function set(_value) {
-      this._sprite.tint = _value;
+      this._tint = _value;
+      this._sprite.rotation = _value;
     }
   }, {
     key: "anchor",
     get: function get() {
-      return {
-        x: this._sprite.anchor.x,
-        y: this._sprite.anchor.x
-      };
+      return this._anchor;
     },
     set: function set(_value) {
+      this._anchor = _value;
       this._sprite.anchor.x = _value.x;
       this._sprite.anchor.y = _value.y;
     }
@@ -42745,21 +42787,24 @@ var CollisionWithObject = /*#__PURE__*/function () {
     value: function collision(col1, col2) {
       var hit, vectorX, vectorY, combinedHalfWidths, combinedHalfHeights;
       hit = false;
-      col1.centerX = col1.x + col1.width / 2;
-      col1.centerY = col1.y + col1.height / 2;
-      col2.centerX = col2.x + col2.width / 2;
-      col2.centerY = col2.y + col2.height / 2;
-      col1.halfWidth = col1.width / 2;
-      col1.halfHeight = col1.height / 2;
-      col2.halfWidth = col2.width / 2;
-      col2.halfHeight = col2.height / 2;
-      vectorX = col1.centerX - col2.centerX;
-      vectorY = col1.centerY - col2.centerY;
-      combinedHalfWidths = col1.halfWidth + col2.halfWidth;
-      combinedHalfHeights = col1.halfHeight + col2.halfHeight;
+      var centerX1 = col1.x + col1.width / 2;
+      var centerY1 = col1.y + col1.height / 2;
+      var centerX2 = col2.x + col2.width / 2;
+      var centerY2 = col2.y + col2.height / 2;
+      var halfWidth1 = col1.width / 2;
+      var halfHeight1 = col1.height / 2;
+      var halfWidth2 = col2.width / 2;
+      var halfHeight2 = col2.height / 2;
+      vectorX = centerX1 - centerX2;
+      vectorY = centerY1 - centerY2;
+      combinedHalfWidths = halfWidth1 + halfWidth2;
+      combinedHalfHeights = halfHeight1 + halfHeight2;
+      2;
 
-      if (Math.abs(vectorX) < combinedHalfWidths || Math.abs(vectorY) < combinedHalfWidths) {
-        hit = true;
+      if (Math.abs(vectorX) < combinedHalfWidths) {
+        if (Math.abs(vectorY) < combinedHalfHeights) {
+          hit = true;
+        }
       }
 
       return hit;
@@ -42980,7 +43025,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61646" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50109" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

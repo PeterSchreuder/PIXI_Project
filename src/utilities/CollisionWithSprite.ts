@@ -8,30 +8,33 @@ export class CollisionWithObject {
 
         hit = false;
 
-        col1.centerX = col1.x + col1.width / 2;
-        col1.centerY = col1.y + col1.height / 2;
+        let centerX1 = col1.x + col1.width / 2;
+        let centerY1 = col1.y + col1.height / 2;
 
-        col2.centerX = col2.x + col2.width / 2;
-        col2.centerY = col2.y + col2.height / 2;
-
-
-        col1.halfWidth = col1.width / 2;
-        col1.halfHeight = col1.height / 2;
-
-        col2.halfWidth = col2.width / 2;
-        col2.halfHeight = col2.height / 2;
+        let centerX2 = col2.x + col2.width / 2;
+        let centerY2 = col2.y + col2.height / 2;
 
 
-        vectorX = col1.centerX - col2.centerX;
-        vectorY = col1.centerY - col2.centerY;
+        let halfWidth1 = col1.width / 2;
+        let halfHeight1 = col1.height / 2;
 
-        combinedHalfWidths = col1.halfWidth + col2.halfWidth;
-        combinedHalfHeights = col1.halfHeight + col2.halfHeight;
+        let halfWidth2 = col2.width / 2;
+        let halfHeight2 = col2.height / 2;
 
-        //Check for collision
-        if (Math.abs(vectorX) < combinedHalfWidths || Math.abs(vectorY) < combinedHalfWidths) {
 
-            hit = true;
+        vectorX = centerX1 - centerX2;
+        vectorY = centerY1 - centerY2;
+
+        combinedHalfWidths = halfWidth1 + halfWidth2;
+        combinedHalfHeights = halfHeight1 + halfHeight2;
+
+ 2      //Check for collision
+        if (Math.abs(vectorX) < combinedHalfWidths) {
+
+            if (Math.abs(vectorY) < combinedHalfHeights) {
+
+                hit = true;
+            }
         }
 
         return hit;
