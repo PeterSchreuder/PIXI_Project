@@ -52,8 +52,10 @@ export class Player extends GameObject {
 
             if (i == 0)
             {
-                _array[i].x = this.x - this.width;
-                _array[i].y = this.y - this.height;
+                let _pos = this.getPointInDirection(this.currentDirection, this.width);
+                console.log(_pos)
+                _array[i].x = this.x + _pos.x;
+                _array[i].y = this.y + _pos.y;
             }
             else
             {
@@ -87,13 +89,14 @@ export class Player extends GameObject {
             this._yy %= 32;
             this._xx %= 32;
 
+            let _updateDirection = false;
             //- Vertical
             if (this.currentDirection == 90 || this.currentDirection == 270)
             {
                 // Turn on the next grid axis
                 if (round(this._yy) == 0)
                 {
-                    this._currentDirection = this.nextDirection;
+                    _updateDirection = true;
                 }
             }
 
@@ -103,9 +106,15 @@ export class Player extends GameObject {
                 // Turn on the next grid axis
                 if (round(this._xx) == 0)
                 {
-                    this._currentDirection = this.nextDirection;
+                    _updateDirection = true;
                 }
             }
+
+            if (_updateDirection)
+            {
+                this._currentDirection = this.nextDirection;
+                this.sprite.rotation = this.currentDirection;
+            }                
 
             this.moveDirection(this.currentDirection, this.speed);
 

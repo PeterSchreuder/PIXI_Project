@@ -55,7 +55,7 @@ export class GameObject {
         this.y += Math.sin(_direction) * _speed;
     }
 
-    public getPointInDirection(_direction: number, _distance: number): object {
+    public getPointInDirection(_direction: number | undefined, _distance: number): object {
 
         let obj = {x: 0, y: 0};
 
@@ -92,7 +92,7 @@ export class GameObject {
     set y(_value: number) { this._y = _value; this._sprite.y = _value; }
 
     get rotation(): number { return this._rotation; }
-    set rotation(_value: number) { this._rotation = _value; this._sprite.rotation = _value; }
+    set rotation(_value: number) { _value *= (Math.PI / 180); this._rotation = _value; this._sprite.rotation = _value; }
 
     //- Visuals
     get sprite(): PIXI.Sprite { return this._sprite; }
