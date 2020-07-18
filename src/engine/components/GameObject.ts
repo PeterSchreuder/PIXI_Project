@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js"
 
 import { InputManager } from "./InputManager";
 import { GameLoop } from "../../GameLoop";
-
+import { GameProperties } from "../../utilities/GameProperties";
 
 export class GameObject {
 
@@ -71,6 +71,15 @@ export class GameObject {
     public update(): void {
         
         //if (this._currentDirection != this._nextDirection)
+    }
+
+    public checkHitWall(): boolean {
+        let _return = false;
+
+        if (this.x < this.width / 2 || this.x > GameProperties.levelWidth - this.width / 2 || this.y < this.height / 2 || this.y > GameProperties.levelHeight - this.height / 2)
+            _return = true;
+        
+        return _return;
     }
 
     //#region - Getters & Setters
