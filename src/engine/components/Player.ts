@@ -71,8 +71,8 @@ export class Player extends GameObject {
 
             this.moveDirection(this.currentDirection, this.speed);
 
-            this.x = clamp(this.x, 0 + this.width / 2, GameProperties.levelWidth - this.width / 2);
-            this.y = clamp(this.y, 0 + this.height / 2, GameProperties.levelHeight - this.height / 2);
+            //this.x = clamp(this.x, 0 + this.width / 2, GameProperties.levelWidth - this.width / 2);
+            //this.y = clamp(this.y, 0 + this.height / 2, GameProperties.levelHeight - this.height / 2);
         }
         
     }

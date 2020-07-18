@@ -6,7 +6,7 @@ export class InputManager {
     private mouse: {x: number, y: number};
     private renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
 
-    constructor(keyboardElement: any, mouseElement: any, renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer) {
+    constructor(mouseElement: any, renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer) {
 
         this.renderer = renderer;
 
