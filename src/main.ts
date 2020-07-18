@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js"
-import Sprite = PIXI.Sprite;
+//
 
 import {GameProperties} from "./utilities/GameProperties";
 import {GameLoop} from "./GameLoop";
@@ -36,7 +36,7 @@ function onLoad(): void {
             resolution: 1,
             
         }
-
+        
         let app = PIXI.autoDetectRenderer(
             GameProperties.levelWidth,
             GameProperties.levelHeight,

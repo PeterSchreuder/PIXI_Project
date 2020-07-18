@@ -13,8 +13,7 @@ export class GameObject {
     private _y: number;
     private _rotation: number;
 
-    private _currentDirection: number;
-    private _nextDirection: number;
+    
 
     //- Visuals
     private _stage: PIXI.Container;
@@ -36,8 +35,7 @@ export class GameObject {
         this._y = _y;
         this._rotation = this._sprite.rotation;
 
-        this._currentDirection = this._rotation;
-        this._nextDirection = this._rotation;
+        
         
         this._width = this._sprite.width;
         this._height = this._sprite.width;
@@ -59,8 +57,19 @@ export class GameObject {
         this.y += Math.sin(_direction) * _speed;
     }
 
-    public update(): void {
+    public getPointInDirection(_direction: number, _distance: number): object {
 
+        let obj = {x: 0, y: 0};
+
+        _direction *= (Math.PI / 180);
+        let _x = Math.cos(_direction) * _distance;
+        let _y = Math.sin(_direction) * _distance;
+
+        return {x: Math.round(_x), y: Math.round(_y)};
+    }
+
+    public update(): void {
+        
         //if (this._currentDirection != this._nextDirection)
     }
 
@@ -68,7 +77,7 @@ export class GameObject {
 
     //- Positions
     get x(): number { return this._x; }
-    set x(_value: number) { this._x = _value; this._sprite.x = _value; }//this._sprite.x = _value;
+    set x(_value: number) { this._x = _value; this._sprite.x = _value; }
 
     get y(): number { return this._y; }
     set y(_value: number) { this._y = _value; this._sprite.y = _value; }

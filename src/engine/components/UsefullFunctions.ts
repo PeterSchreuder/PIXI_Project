@@ -1,34 +1,45 @@
-export class UsefullFunctions {
+module UsefullFunctions {
 
-    constructor() {
-
-    }
-
-    public lookTowardPoint(_x: number, _y: number, _x2: number, _y2: number): number {
+    export function lookTowardPoint(_x: number, _y: number, _x2: number, _y2: number): number {
         
         return Math.atan2(_y - _y2, _x - _x2);
     }
 
-    public lengthDirX(direction: number, length: number): number {
+    export function lengthDirX(direction: number, length: number): number {
 
-        let radAngle = this.toRadians(direction);
+        let radAngle = toRadians(direction);
         return (Math.cos(radAngle) * length);
     }
 
-    public lengthDirY(direction: number, length: number): number {
+    export function lengthDirY(direction: number, length: number): number {
 
-        let radAngle = this.toRadians(direction);
+        let radAngle = toRadians(direction);
         return (Math.sin(radAngle) * length);
     }
 
     //- Math
-    public toRadians(degrees: number): number {
+    export function toRadians(degrees: number): number {
 
         return degrees * (Math.PI / 180);
     }
 
-    public toDegrees(radians: number): number {
+    export function toDegrees(radians: number): number {
 
         return radians * (180 / Math.PI);
+    }
+
+    export function clamp(_variable: number, _min: number, _max: number): number {
+        let _return = _variable;
+
+        if (_variable > _max)
+            _return = _max;
+        else if (_variable < _min)
+            _return = _min;
+
+        return _return;
+    }
+
+    export function round(_variable: number): number {
+        return Math.round(_variable);
     }
 }

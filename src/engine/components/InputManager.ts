@@ -1,3 +1,5 @@
+import { vk_Keys } from "../../utilities/VirtualKeyboard";
+
 export class InputManager {
 
     private keys: Map<number, boolean>;
@@ -63,7 +65,7 @@ export class InputManager {
         return _return;
     }
 
-    public keyDown(_value: InputManager.vk_Keys): boolean {
+    public keyDown(_value: vk_Keys): boolean {
         
         let _return = false;
 
@@ -73,7 +75,7 @@ export class InputManager {
         return _return;
     }
 
-    public keyUp(_value: InputManager.vk_Keys): boolean {
+    public keyUp(_value: vk_Keys): boolean {
         
         let _return = false;
 
@@ -87,19 +89,5 @@ export class InputManager {
 export namespace InputManager {
 
     //- Virtual keyboard keys
-    export enum vk_Keys {
-        null = -1,
-        up = 38,
-        down = 40,
-        left = 37,
-        right = 39,
-
-        w = 87,
-        s = 83,
-        a = 65,
-        d = 68,
-
-        space = 32,
-        enter = 13
-    }
+    
 }

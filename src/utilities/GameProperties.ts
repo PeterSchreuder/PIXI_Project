@@ -1,4 +1,4 @@
-export enum GameProperties {
+export const enum GameProperties {
     gridSize = 17,
     gridTileSize = 32,
     levelWidth = gridSize * gridTileSize,
