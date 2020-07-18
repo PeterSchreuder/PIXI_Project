@@ -61918,19 +61918,49 @@ var TextManager = /*#__PURE__*/function () {
   function TextManager(_stage) {
     _classCallCheck(this, TextManager);
 
+    this._textlist = new Map();
     this._rootStage = _stage;
   }
 
   _createClass(TextManager, [{
     key: "CreateText",
-    value: function CreateText(_x, _y, _string, _obj) {
-      var _text = new PIXI.Text(_string, _obj);
+    value: function CreateText(_id, _x, _y, _string, _obj) {
+      var _text;
 
-      this._rootStage.addChild(_text);
+      var _oldText = this._textlist.get(_id);
+
+      if (_oldText) {
+        _text = _oldText;
+        _text.text = _string;
+
+        var _style = new PIXI.TextStyle(_obj);
+
+        _text.style = _style;
+      } else {
+        _text = new PIXI.Text(_string, _obj);
+
+        this._rootStage.addChild(_text);
+      }
+
+      this._textlist.set(_id, _text);
 
       _text.x = _x;
       _text.y = _y;
       return _text;
+    }
+  }, {
+    key: "textToggleVisibillity",
+    value: function textToggleVisibillity(_id, _boolean) {
+      var _obj = this._textlist.get(_id);
+
+      if (_obj) _obj.visible = _boolean;
+    }
+  }, {
+    key: "textDisableAll",
+    value: function textDisableAll() {
+      this._textlist.forEach(function (id) {
+        id.visible = false;
+      });
     }
   }]);
 
@@ -62245,12 +62275,6 @@ var GameLoop = /*#__PURE__*/function () {
       this.gridSystem = new GridSystem_1.GridSystem(this.rootStage, 17, 17, 32);
       this.gridSystem.gridInit();
       this.gameObjects.set("player", new Player_1.Player(this.rootStage, GameProperties_1.GameProperties.levelWidth / 2, GameProperties_1.GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
-      this.textManager.CreateText(5, 5, "Test text", {
-        fill: "#ffa200",
-        fontSize: 20,
-        lineJoin: "round",
-        strokeThickness: 5
-      });
     }
   }, {
     key: "update",
@@ -62263,6 +62287,18 @@ var GameLoop = /*#__PURE__*/function () {
       switch (this.gameManager.gameStateCurrent) {
         case GameStates_1.GameStates.Begin:
           this.gameManager.gameStateCurrent = GameStates_1.GameStates.Mid;
+          this.textManager.CreateText("test", 5, 5, "Test text", {
+            fill: "#ffa200",
+            fontSize: 20,
+            lineJoin: "round",
+            strokeThickness: 2
+          });
+          this.textManager.CreateText("test", 51, 5, "Test text2", {
+            fill: "#ffa200",
+            fontSize: 20,
+            lineJoin: "round",
+            strokeThickness: 5
+          });
           break;
 
         case GameStates_1.GameStates.Mid:
@@ -62410,7 +62446,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50252" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51643" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -64,12 +64,7 @@ export class GameLoop implements UpdateableElement {
         
         //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
-        this.textManager.CreateText(5, 5, "Test text", {
-            fill: "#ffa200",
-            fontSize: 20,
-            lineJoin: "round",
-            strokeThickness: 5
-        });
+        
     }
 
     public update(): void {
@@ -82,8 +77,23 @@ export class GameLoop implements UpdateableElement {
         {
             case GameStates.Begin:
 
+
                 //
                 this.gameManager.gameStateCurrent = GameStates.Mid;
+
+                this.textManager.CreateText("test", 5, 5, "Test text", {
+                    fill: "#ffa200",
+                    fontSize: 20,
+                    lineJoin: "round",
+                    strokeThickness: 2
+                });
+
+                this.textManager.CreateText("test", 51, 5, "Test text2", {
+                    fill: "#ffa200",
+                    fontSize: 20,
+                    lineJoin: "round",
+                    strokeThickness: 5
+                });
 
             break;
 
