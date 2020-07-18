@@ -1,38 +1,86 @@
 import * as PIXI from "pixi.js"
 
-import {RenderableElement} from "../../utilities/RenderableElement";
-import {UpdateableElement} from "../../utilities/UpdateableElement";
-
 import {GameProperties} from "../../utilities/GameProperties";
-import {GameScene} from "../stages/GameScene";
 
-export class GameManager implements RenderableElement, UpdateableElement {
+import {GameStates} from "../../utilities/GameStates"
+
+export class GameManager {
     
-    private gameScene: GameScene;
-    private stage: PIXI.Container;
+    private _gameStateCurrent: GameStates;
+    private _gameStatePrev: GameStates;
 
-    constructor() {
+    constructor () {
 
+        this._gameStateCurrent = GameStates.Begin;
+        this._gameStatePrev = this._gameStateCurrent;
     }
 
     public update(): void {
 
-        //this.gameScene.getObjects.
+        switch (this.gameStateCurrent)
+        {
+            case GameStates.Begin:
+
+                //
+
+            break;
+
+            case GameStates.Mid:
+
+                //
+
+            break;
+
+            case GameStates.Win:
+
+                //
+
+            break;
+
+            case GameStates.Lose:
+
+                //
+
+            break;
+        }
     }
 
-    createStage(): PIXI.Container {
+    get gameStateCurrent(): GameStates { return this._gameStateCurrent; }
+    set gameStateCurrent(_value: GameStates) { 
+        
+        this._gameStatePrev = this.gameStateCurrent;
+        this._gameStateCurrent = _value; 
+        
+        //- This is run when the state has been changed
+        switch (_value)
+        {
+            case GameStates.Begin:
 
-        this.stage = new PIXI.Container();
+                //
 
-        this.gameScene = new GameScene();
-        this.stage.addChild(this.gameScene.getStage());
+            break;
 
-        return this.stage;
+            case GameStates.Mid:
+
+                //
+
+            break;
+
+            case GameStates.Win:
+
+                //
+
+            break;
+
+            case GameStates.Lose:
+
+                //
+
+            break;
+        }
     }
 
-    getStage(): PIXI.Container | undefined {
-        return this.stage;
-    }
+    get gameStatePrev(): GameStates { return this._gameStatePrev; }
 }
 
 

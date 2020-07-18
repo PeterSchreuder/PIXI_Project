@@ -62043,7 +62043,95 @@ var vk_Keys;
   vk_Keys[vk_Keys["space"] = 32] = "space";
   vk_Keys[vk_Keys["enter"] = 13] = "enter";
 })(vk_Keys = exports.vk_Keys || (exports.vk_Keys = {}));
-},{}],"src/GameLoop.ts":[function(require,module,exports) {
+},{}],"src/utilities/GameStates.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var GameStates;
+
+(function (GameStates) {
+  GameStates[GameStates["Begin"] = 0] = "Begin";
+  GameStates[GameStates["Mid"] = 1] = "Mid";
+  GameStates[GameStates["Win"] = 2] = "Win";
+  GameStates[GameStates["Lose"] = 3] = "Lose";
+})(GameStates = exports.GameStates || (exports.GameStates = {}));
+},{}],"src/engine/components/GameManager.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var GameStates_1 = require("../../utilities/GameStates");
+
+var GameManager = /*#__PURE__*/function () {
+  function GameManager() {
+    _classCallCheck(this, GameManager);
+
+    this._gameStateCurrent = GameStates_1.GameStates.Begin;
+    this._gameStatePrev = this._gameStateCurrent;
+  }
+
+  _createClass(GameManager, [{
+    key: "update",
+    value: function update() {
+      switch (this.gameStateCurrent) {
+        case GameStates_1.GameStates.Begin:
+          break;
+
+        case GameStates_1.GameStates.Mid:
+          break;
+
+        case GameStates_1.GameStates.Win:
+          break;
+
+        case GameStates_1.GameStates.Lose:
+          break;
+      }
+    }
+  }, {
+    key: "gameStateCurrent",
+    get: function get() {
+      return this._gameStateCurrent;
+    },
+    set: function set(_value) {
+      this._gameStatePrev = this.gameStateCurrent;
+      this._gameStateCurrent = _value;
+
+      switch (_value) {
+        case GameStates_1.GameStates.Begin:
+          break;
+
+        case GameStates_1.GameStates.Mid:
+          break;
+
+        case GameStates_1.GameStates.Win:
+          break;
+
+        case GameStates_1.GameStates.Lose:
+          break;
+      }
+    }
+  }, {
+    key: "gameStatePrev",
+    get: function get() {
+      return this._gameStatePrev;
+    }
+  }]);
+
+  return GameManager;
+}();
+
+exports.GameManager = GameManager;
+},{"../../utilities/GameStates":"src/utilities/GameStates.ts"}],"src/GameLoop.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -62078,16 +62166,20 @@ var GridSystem_1 = require("./engine/components/gridsystem/GridSystem");
 
 var VirtualKeyboard_1 = require("./utilities/VirtualKeyboard");
 
+var GameManager_1 = require("./engine/components/GameManager");
+
+var GameStates_1 = require("./utilities/GameStates");
+
 var GameLoop = /*#__PURE__*/function () {
   function GameLoop(rendered) {
     _classCallCheck(this, GameLoop);
 
+    this.gameManager = new GameManager_1.GameManager();
     this.gameObjects = new Map();
     this.renderer = rendered;
     this.rootStage = new PIXI.Container();
     this.fps = 0;
     this.inputManager = new InputManager_1.InputManager(document.querySelector("#display"), document.querySelector("#display"), this.renderer);
-    console.log(this.inputManager);
   }
 
   _createClass(GameLoop, [{
@@ -62105,17 +62197,32 @@ var GameLoop = /*#__PURE__*/function () {
       });
       var inputManager = this.inputManager;
 
-      var _player = this.getGameObject("player");
+      switch (this.gameManager.gameStateCurrent) {
+        case GameStates_1.GameStates.Begin:
+          this.gameManager.gameStateCurrent = GameStates_1.GameStates.Mid;
+          break;
 
-      var _direction = undefined;
-      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.a) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.left)) _direction = 180;
-      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.d) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.right)) _direction = 0;
-      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.w) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.up)) _direction = 270;
-      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.s) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.down)) _direction = 90;
+        case GameStates_1.GameStates.Mid:
+          var _player = this.getGameObject("player");
 
-      if (_direction != undefined) {
-        _player.nextDirection = _direction;
-        _player.speed = 2;
+          var _direction = undefined;
+          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.a) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.left)) _direction = 180;
+          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.d) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.right)) _direction = 0;
+          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.w) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.up)) _direction = 270;
+          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.s) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.down)) _direction = 90;
+
+          if (_direction != undefined) {
+            _player.nextDirection = _direction;
+            _player.speed = 2;
+          }
+
+          break;
+
+        case GameStates_1.GameStates.Win:
+          break;
+
+        case GameStates_1.GameStates.Lose:
+          break;
       }
     }
   }, {
@@ -62142,7 +62249,7 @@ var GameLoop = /*#__PURE__*/function () {
 }();
 
 exports.GameLoop = GameLoop;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/Player":"src/engine/components/Player.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts","./engine/components/gridsystem/GridSystem":"src/engine/components/gridsystem/GridSystem.ts","./utilities/VirtualKeyboard":"src/utilities/VirtualKeyboard.ts"}],"src/main.ts":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/Player":"src/engine/components/Player.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts","./engine/components/gridsystem/GridSystem":"src/engine/components/gridsystem/GridSystem.ts","./utilities/VirtualKeyboard":"src/utilities/VirtualKeyboard.ts","./engine/components/GameManager":"src/engine/components/GameManager.ts","./utilities/GameStates":"src/utilities/GameStates.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -62240,7 +62347,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62248" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49227" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
