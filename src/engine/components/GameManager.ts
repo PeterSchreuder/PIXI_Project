@@ -129,7 +129,7 @@ export class GameManager {
             case GameStates.Begin:
                 
 
-                if (this.inputManager.keyUp(vk_Keys.enter))
+                if (this.inputManager.keyDown(vk_Keys.enter))
                     this.gameStateCurrent = GameStates.Mid;
 
             break;
@@ -149,7 +149,7 @@ export class GameManager {
 
             case GameStates.Lose:
 
-                if (this.inputManager.keyUp(vk_Keys.enter))
+                if (this.inputManager.keyDown(vk_Keys.enter))
                     this.gameStateCurrent = GameStates.Begin;
 
             break;

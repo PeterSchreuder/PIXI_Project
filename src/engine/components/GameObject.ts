@@ -13,8 +13,6 @@ export class GameObject {
     private _y: number;
     private _rotation: number;
 
-    
-
     //- Visuals
     private _stage: PIXI.Container;
     private _sprite: PIXI.Sprite;
@@ -83,6 +81,8 @@ export class GameObject {
     }
 
     //#region - Getters & Setters
+
+    get stage(): PIXI.Container { return this._stage; }
 
     //- Positions
     get x(): number { return this._x; }
