@@ -7,11 +7,13 @@ import { GameObject } from "./engine/components/GameObject";
 import { Player } from "./engine/components/Player";
 
 import { InputManager } from "./engine/components/InputManager";
-import {GameProperties} from "./utilities/GameProperties"
-import {UpdateableElement} from "./utilities/UpdateableElement";
+import { TextManager } from "./engine/components/TextManager";
+
+import { GameProperties } from "./utilities/GameProperties"
+import { UpdateableElement } from "./utilities/UpdateableElement";
 import { GridSystem } from "./engine/components/gridsystem/GridSystem";
 
-import {CollisionWithObject} from "./utilities/CollisionWithSprite";
+import { CollisionWithObject } from "./utilities/CollisionWithSprite";
 
 import {vk_Keys} from "./utilities/VirtualKeyboard"
 
@@ -23,6 +25,7 @@ export class GameLoop implements UpdateableElement {
     public fps: number;
 
     public inputManager: InputManager;
+    private textManager: TextManager;
 
     private gridSystem: GridSystem;
 
@@ -36,7 +39,7 @@ export class GameLoop implements UpdateableElement {
         this.fps = 0;
 
         this.inputManager = new InputManager(document.querySelector("#display"), document.querySelector("#display"), this.renderer);
-        console.log(this.inputManager)
+        this.textManager = new TextManager(this.rootStage);
     }
 
     public setupGame(): void {
@@ -49,7 +52,12 @@ export class GameLoop implements UpdateableElement {
         this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
         //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
-
+        this.textManager.CreateText(5, 5, "Test text", {
+            fill: "#ffa200",
+            fontSize: 20,
+            lineJoin: "round",
+            strokeThickness: 5
+        });
     }
 
     public update(): void {

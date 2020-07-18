@@ -61889,7 +61889,56 @@ var InputManager = /*#__PURE__*/function () {
 }();
 
 exports.InputManager = InputManager;
-},{}],"src/engine/components/gridsystem/Tile.ts":[function(require,module,exports) {
+},{}],"src/engine/components/TextManager.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+  }
+  result["default"] = mod;
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var PIXI = __importStar(require("pixi.js"));
+
+var TextManager = /*#__PURE__*/function () {
+  function TextManager(_stage) {
+    _classCallCheck(this, TextManager);
+
+    this._rootStage = _stage;
+  }
+
+  _createClass(TextManager, [{
+    key: "CreateText",
+    value: function CreateText(_x, _y, _string, _obj) {
+      var _text = new PIXI.Text(_string, _obj);
+
+      this._rootStage.addChild(_text);
+
+      _text.x = _x;
+      _text.y = _y;
+      return _text;
+    }
+  }]);
+
+  return TextManager;
+}();
+
+exports.TextManager = TextManager;
+},{"pixi.js":"node_modules/pixi.js/lib/index.js"}],"src/engine/components/gridsystem/Tile.ts":[function(require,module,exports) {
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -62072,6 +62121,8 @@ var Player_1 = require("./engine/components/Player");
 
 var InputManager_1 = require("./engine/components/InputManager");
 
+var TextManager_1 = require("./engine/components/TextManager");
+
 var GameProperties_1 = require("./utilities/GameProperties");
 
 var GridSystem_1 = require("./engine/components/gridsystem/GridSystem");
@@ -62087,7 +62138,7 @@ var GameLoop = /*#__PURE__*/function () {
     this.rootStage = new PIXI.Container();
     this.fps = 0;
     this.inputManager = new InputManager_1.InputManager(document.querySelector("#display"), document.querySelector("#display"), this.renderer);
-    console.log(this.inputManager);
+    this.textManager = new TextManager_1.TextManager(this.rootStage);
   }
 
   _createClass(GameLoop, [{
@@ -62096,6 +62147,12 @@ var GameLoop = /*#__PURE__*/function () {
       this.gridSystem = new GridSystem_1.GridSystem(this.rootStage, 17, 17, 32);
       this.gridSystem.gridInit();
       this.gameObjects.set("player", new Player_1.Player(this.rootStage, GameProperties_1.GameProperties.levelWidth / 2, GameProperties_1.GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+      this.textManager.CreateText(5, 5, "Test text", {
+        fill: "#ffa200",
+        fontSize: 20,
+        lineJoin: "round",
+        strokeThickness: 5
+      });
     }
   }, {
     key: "update",
@@ -62142,7 +62199,7 @@ var GameLoop = /*#__PURE__*/function () {
 }();
 
 exports.GameLoop = GameLoop;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/Player":"src/engine/components/Player.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts","./engine/components/gridsystem/GridSystem":"src/engine/components/gridsystem/GridSystem.ts","./utilities/VirtualKeyboard":"src/utilities/VirtualKeyboard.ts"}],"src/main.ts":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/Player":"src/engine/components/Player.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./engine/components/TextManager":"src/engine/components/TextManager.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts","./engine/components/gridsystem/GridSystem":"src/engine/components/gridsystem/GridSystem.ts","./utilities/VirtualKeyboard":"src/utilities/VirtualKeyboard.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -62240,7 +62297,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62248" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54055" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
