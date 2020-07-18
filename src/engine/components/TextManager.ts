@@ -11,6 +11,8 @@ export class TextManager {
 
     public CreateText(_x: number, _y: number, _string: string, _obj: object): PIXI.Text {
 
+        //Use this to create styling: https://pixijs.io/pixi-text-style/#
+
         let _text = new PIXI.Text(_string, _obj);
         this._rootStage.addChild(_text);
 

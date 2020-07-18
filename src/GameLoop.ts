@@ -16,12 +16,15 @@ import { GridSystem } from "./engine/components/gridsystem/GridSystem";
 import { CollisionWithObject } from "./utilities/CollisionWithSprite";
 
 import {vk_Keys} from "./utilities/VirtualKeyboard"
+import { types } from "@babel/core";
 
 export class GameLoop implements UpdateableElement {
 
     private readonly renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
     //private readonly gameManager: GameManager;
     private rootStage: PIXI.Container;
+    private stages: {background: PIXI.Container, playingfield: PIXI.Container, gui: PIXI.Container};
+
     public fps: number;
 
     public inputManager: InputManager;
@@ -35,7 +38,11 @@ export class GameLoop implements UpdateableElement {
 
         this.renderer = rendered;
         //this.gameManager = new GameManager();
+
+        this.stages = {background: new PIXI.Container(), playingfield: new PIXI.Container(), gui: new PIXI.Container()};
+
         this.rootStage = new PIXI.Container();
+
         this.fps = 0;
 
         this.inputManager = new InputManager(document.querySelector("#display"), document.querySelector("#display"), this.renderer);
@@ -52,6 +59,7 @@ export class GameLoop implements UpdateableElement {
         this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
         //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+        
         this.textManager.CreateText(5, 5, "Test text", {
             fill: "#ffa200",
             fontSize: 20,
@@ -120,6 +128,9 @@ export class GameLoop implements UpdateableElement {
         //     .forEach(stage => rootStage.addChild(stage));
 
         this.renderer.render(this.rootStage);
+        //this.renderer.render(this.stages.background);
+        //this.renderer.render(this.stages.playingfield);
+        //this.renderer.render(this.stages.gui);
     }
 
     public getGameObject(object: string): GameObject | Player | undefined {

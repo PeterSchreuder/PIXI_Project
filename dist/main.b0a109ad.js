@@ -62135,6 +62135,11 @@ var GameLoop = /*#__PURE__*/function () {
 
     this.gameObjects = new Map();
     this.renderer = rendered;
+    this.stages = {
+      background: new PIXI.Container(),
+      playingfield: new PIXI.Container(),
+      gui: new PIXI.Container()
+    };
     this.rootStage = new PIXI.Container();
     this.fps = 0;
     this.inputManager = new InputManager_1.InputManager(document.querySelector("#display"), document.querySelector("#display"), this.renderer);
@@ -62297,7 +62302,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54055" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50142" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
