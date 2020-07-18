@@ -24,6 +24,7 @@ export class TextManager {
             _text.text = _string;
             let _style = new PIXI.TextStyle(_obj);
             _text.style = _style;
+            _text.visible = true;
         }
         else
         {

@@ -24,7 +24,7 @@ export class GameLoop implements UpdateableElement {
 
     private readonly renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
     
-    private readonly gameManager = new GameManager();
+    private gameManager: GameManager | undefined;
     
     private rootStage: PIXI.Container;
     private stages: {background: PIXI.Container, playingfield: PIXI.Container, gui: PIXI.Container};
@@ -41,11 +41,13 @@ export class GameLoop implements UpdateableElement {
     constructor (rendered: PIXI.CanvasRenderer | PIXI.WebGLRenderer) {
 
         this.renderer = rendered;
-        //this.gameManager = new GameManager();
+        this.rootStage = new PIXI.Container();
+
+        //this.gameManager: GameManager;
 
         this.stages = {background: new PIXI.Container(), playingfield: new PIXI.Container(), gui: new PIXI.Container()};
 
-        this.rootStage = new PIXI.Container();
+        
 
         this.fps = 0;
 
@@ -64,75 +66,68 @@ export class GameLoop implements UpdateableElement {
         
         //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
+        this.gameManager = new GameManager(this.rootStage);
         
     }
 
     public update(): void {
 
-        this.gameObjects.forEach(obj => {obj.update()});
-        
         let inputManager = this.inputManager;
 
-        switch (this.gameManager.gameStateCurrent)
-        {
-            case GameStates.Begin:
+        this.gameObjects.forEach(obj => {obj.update()});
+        
+        if (this.gameManager) {
+
+            this.gameManager.update();
+            
+            
+
+            switch (this.gameManager.gameStateCurrent)
+            {
+                case GameStates.Begin:
 
 
-                //
-                this.gameManager.gameStateCurrent = GameStates.Mid;
+                    //
+                    
 
-                this.textManager.CreateText("test", 5, 5, "Test text", {
-                    fill: "#ffa200",
-                    fontSize: 20,
-                    lineJoin: "round",
-                    strokeThickness: 2
-                });
+                break;
 
-                this.textManager.CreateText("test", 51, 5, "Test text2", {
-                    fill: "#ffa200",
-                    fontSize: 20,
-                    lineJoin: "round",
-                    strokeThickness: 5
-                });
+                case GameStates.Mid:
 
-            break;
+                    console.log(11)
+                    
+                    //#region Move the player
+                    let _player = this.getGameObject("player");
+                    //let _player2 = this.getGameObject("player2");
+                    
+                    let _direction = undefined;
+                    if (inputManager.keyDown(vk_Keys.a) || inputManager.keyDown(vk_Keys.left)) _direction = 180;
+                    if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) _direction = 0;
+                    if (inputManager.keyDown(vk_Keys.w) || inputManager.keyDown(vk_Keys.up)) _direction = 270;
+                    if (inputManager.keyDown(vk_Keys.s) || inputManager.keyDown(vk_Keys.down)) _direction = 90;
 
-            case GameStates.Mid:
+                    if (_direction != undefined)
+                    {
+                        _player.nextDirection = _direction;
+                        _player.speed = 2;
+                    }
 
-                
-                
-                //#region Move the player
-                let _player = this.getGameObject("player");
-                //let _player2 = this.getGameObject("player2");
-                
-                let _direction = undefined;
-                if (inputManager.keyDown(vk_Keys.a) || inputManager.keyDown(vk_Keys.left)) _direction = 180;
-                if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) _direction = 0;
-                if (inputManager.keyDown(vk_Keys.w) || inputManager.keyDown(vk_Keys.up)) _direction = 270;
-                if (inputManager.keyDown(vk_Keys.s) || inputManager.keyDown(vk_Keys.down)) _direction = 90;
+                break;
 
-                if (_direction != undefined)
-                {
-                    _player.nextDirection = _direction;
-                    _player.speed = 2;
-                }
+                case GameStates.Win:
 
-            break;
+                    //
 
-            case GameStates.Win:
+                break;
 
-                //
+                case GameStates.Lose:
 
-            break;
+                    //
 
-            case GameStates.Lose:
+                break;
+            }
 
-                //
-
-            break;
         }
-
-
         
             
 
