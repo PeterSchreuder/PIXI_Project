@@ -40,7 +40,6 @@ export class GameManager {
 
                 this.resetGame();
                 
-                console.log(11111111)
                 //
                 this.textManager.CreateText("Scene Text", 5, 5, "Test text", {
                     fill: "#ffa200",
