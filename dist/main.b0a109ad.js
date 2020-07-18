@@ -61889,7 +61889,56 @@ var InputManager = /*#__PURE__*/function () {
 }();
 
 exports.InputManager = InputManager;
-},{}],"src/engine/components/gridsystem/Tile.ts":[function(require,module,exports) {
+},{}],"src/engine/components/TextManager.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+  }
+  result["default"] = mod;
+  return result;
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var PIXI = __importStar(require("pixi.js"));
+
+var TextManager = /*#__PURE__*/function () {
+  function TextManager(_stage) {
+    _classCallCheck(this, TextManager);
+
+    this._rootStage = _stage;
+  }
+
+  _createClass(TextManager, [{
+    key: "CreateText",
+    value: function CreateText(_x, _y, _string, _obj) {
+      var _text = new PIXI.Text(_string, _obj);
+
+      this._rootStage.addChild(_text);
+
+      _text.x = _x;
+      _text.y = _y;
+      return _text;
+    }
+  }]);
+
+  return TextManager;
+}();
+
+exports.TextManager = TextManager;
+},{"pixi.js":"node_modules/pixi.js/lib/index.js"}],"src/engine/components/gridsystem/Tile.ts":[function(require,module,exports) {
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -62043,95 +62092,7 @@ var vk_Keys;
   vk_Keys[vk_Keys["space"] = 32] = "space";
   vk_Keys[vk_Keys["enter"] = 13] = "enter";
 })(vk_Keys = exports.vk_Keys || (exports.vk_Keys = {}));
-},{}],"src/utilities/GameStates.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var GameStates;
-
-(function (GameStates) {
-  GameStates[GameStates["Begin"] = 0] = "Begin";
-  GameStates[GameStates["Mid"] = 1] = "Mid";
-  GameStates[GameStates["Win"] = 2] = "Win";
-  GameStates[GameStates["Lose"] = 3] = "Lose";
-})(GameStates = exports.GameStates || (exports.GameStates = {}));
-},{}],"src/engine/components/GameManager.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var GameStates_1 = require("../../utilities/GameStates");
-
-var GameManager = /*#__PURE__*/function () {
-  function GameManager() {
-    _classCallCheck(this, GameManager);
-
-    this._gameStateCurrent = GameStates_1.GameStates.Begin;
-    this._gameStatePrev = this._gameStateCurrent;
-  }
-
-  _createClass(GameManager, [{
-    key: "update",
-    value: function update() {
-      switch (this.gameStateCurrent) {
-        case GameStates_1.GameStates.Begin:
-          break;
-
-        case GameStates_1.GameStates.Mid:
-          break;
-
-        case GameStates_1.GameStates.Win:
-          break;
-
-        case GameStates_1.GameStates.Lose:
-          break;
-      }
-    }
-  }, {
-    key: "gameStateCurrent",
-    get: function get() {
-      return this._gameStateCurrent;
-    },
-    set: function set(_value) {
-      this._gameStatePrev = this.gameStateCurrent;
-      this._gameStateCurrent = _value;
-
-      switch (_value) {
-        case GameStates_1.GameStates.Begin:
-          break;
-
-        case GameStates_1.GameStates.Mid:
-          break;
-
-        case GameStates_1.GameStates.Win:
-          break;
-
-        case GameStates_1.GameStates.Lose:
-          break;
-      }
-    }
-  }, {
-    key: "gameStatePrev",
-    get: function get() {
-      return this._gameStatePrev;
-    }
-  }]);
-
-  return GameManager;
-}();
-
-exports.GameManager = GameManager;
-},{"../../utilities/GameStates":"src/utilities/GameStates.ts"}],"src/GameLoop.ts":[function(require,module,exports) {
+},{}],"src/GameLoop.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -62160,26 +62121,29 @@ var Player_1 = require("./engine/components/Player");
 
 var InputManager_1 = require("./engine/components/InputManager");
 
+var TextManager_1 = require("./engine/components/TextManager");
+
 var GameProperties_1 = require("./utilities/GameProperties");
 
 var GridSystem_1 = require("./engine/components/gridsystem/GridSystem");
 
 var VirtualKeyboard_1 = require("./utilities/VirtualKeyboard");
 
-var GameManager_1 = require("./engine/components/GameManager");
-
-var GameStates_1 = require("./utilities/GameStates");
-
 var GameLoop = /*#__PURE__*/function () {
   function GameLoop(rendered) {
     _classCallCheck(this, GameLoop);
 
-    this.gameManager = new GameManager_1.GameManager();
     this.gameObjects = new Map();
     this.renderer = rendered;
+    this.stages = {
+      background: new PIXI.Container(),
+      playingfield: new PIXI.Container(),
+      gui: new PIXI.Container()
+    };
     this.rootStage = new PIXI.Container();
     this.fps = 0;
     this.inputManager = new InputManager_1.InputManager(document.querySelector("#display"), document.querySelector("#display"), this.renderer);
+    this.textManager = new TextManager_1.TextManager(this.rootStage);
   }
 
   _createClass(GameLoop, [{
@@ -62188,6 +62152,12 @@ var GameLoop = /*#__PURE__*/function () {
       this.gridSystem = new GridSystem_1.GridSystem(this.rootStage, 17, 17, 32);
       this.gridSystem.gridInit();
       this.gameObjects.set("player", new Player_1.Player(this.rootStage, GameProperties_1.GameProperties.levelWidth / 2, GameProperties_1.GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+      this.textManager.CreateText(5, 5, "Test text", {
+        fill: "#ffa200",
+        fontSize: 20,
+        lineJoin: "round",
+        strokeThickness: 5
+      });
     }
   }, {
     key: "update",
@@ -62197,32 +62167,17 @@ var GameLoop = /*#__PURE__*/function () {
       });
       var inputManager = this.inputManager;
 
-      switch (this.gameManager.gameStateCurrent) {
-        case GameStates_1.GameStates.Begin:
-          this.gameManager.gameStateCurrent = GameStates_1.GameStates.Mid;
-          break;
+      var _player = this.getGameObject("player");
 
-        case GameStates_1.GameStates.Mid:
-          var _player = this.getGameObject("player");
+      var _direction = undefined;
+      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.a) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.left)) _direction = 180;
+      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.d) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.right)) _direction = 0;
+      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.w) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.up)) _direction = 270;
+      if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.s) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.down)) _direction = 90;
 
-          var _direction = undefined;
-          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.a) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.left)) _direction = 180;
-          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.d) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.right)) _direction = 0;
-          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.w) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.up)) _direction = 270;
-          if (inputManager.keyDown(VirtualKeyboard_1.vk_Keys.s) || inputManager.keyDown(VirtualKeyboard_1.vk_Keys.down)) _direction = 90;
-
-          if (_direction != undefined) {
-            _player.nextDirection = _direction;
-            _player.speed = 2;
-          }
-
-          break;
-
-        case GameStates_1.GameStates.Win:
-          break;
-
-        case GameStates_1.GameStates.Lose:
-          break;
+      if (_direction != undefined) {
+        _player.nextDirection = _direction;
+        _player.speed = 2;
       }
     }
   }, {
@@ -62249,7 +62204,7 @@ var GameLoop = /*#__PURE__*/function () {
 }();
 
 exports.GameLoop = GameLoop;
-},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/Player":"src/engine/components/Player.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts","./engine/components/gridsystem/GridSystem":"src/engine/components/gridsystem/GridSystem.ts","./utilities/VirtualKeyboard":"src/utilities/VirtualKeyboard.ts","./engine/components/GameManager":"src/engine/components/GameManager.ts","./utilities/GameStates":"src/utilities/GameStates.ts"}],"src/main.ts":[function(require,module,exports) {
+},{"pixi.js":"node_modules/pixi.js/lib/index.js","./engine/components/Player":"src/engine/components/Player.ts","./engine/components/InputManager":"src/engine/components/InputManager.ts","./engine/components/TextManager":"src/engine/components/TextManager.ts","./utilities/GameProperties":"src/utilities/GameProperties.ts","./engine/components/gridsystem/GridSystem":"src/engine/components/gridsystem/GridSystem.ts","./utilities/VirtualKeyboard":"src/utilities/VirtualKeyboard.ts"}],"src/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -62347,7 +62302,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49227" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50142" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
