@@ -195,4 +195,8 @@ export class GameLoop implements UpdateableElement {
         return this.inputManager;
 
     }
+
+    public getStage(): PIXI.Container {
+        return this.rootStage;
+    }
 }

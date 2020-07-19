@@ -1,8 +1,8 @@
 body {
     overflow: hidden;
     background-color: dimgray;
+    margin: 0;
 }
 
 #display {
-    padding: 0;
 }
