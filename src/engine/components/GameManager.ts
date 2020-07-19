@@ -235,7 +235,11 @@ export class GameManager {
             case GameStates.Lose:
 
                 if (this.inputManager.keyDown(vk_Keys.enter))
+                {
                     this.gameStateCurrent = GameStates.Begin;
+                    location.reload();
+                }
+                    
 
             break;
         }
