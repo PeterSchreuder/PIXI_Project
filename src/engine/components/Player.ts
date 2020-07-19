@@ -66,7 +66,8 @@ export class Player extends GameObject {
 
     public AddBodyObject(_amount: number, _direction: number) {
 
-        let _piece, _x = 0, _y = 0, _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture);
+        let _piece, _x = 0, _y = 0, _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture), _dir = _direction;
+        let _size = this._bodyList.length | 0;
 
         for (let _i = 0; _i < _amount; _i++) {
             
@@ -77,21 +78,29 @@ export class Player extends GameObject {
             {
                 _x = this.x;
                 _y = this.y;
+                _dir = this.currentDirection;
             }
             else
             {
-                _x = this._bodyList[_i - 1].x;
-                _y = this._bodyList[_i - 1].y;
+                let _prevBody = this._bodyList[_i - 1];
+                _dir = _prevBody.rotation;
+                _x = _prevBody.x;
+                _y = _prevBody.y;
 
-                if (_i == _amount - 1)
+                // If last sprite
+                if (_i == _size + _amount - 1)
+                {
+                    _prevBody.sprite = _sprite;
                     _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.bodyEnd.texture);
+                }
+                    
             }
 
-            let _xx = _x + UsefullFunctions.lengthDirX(this.currentDirection - 180, 32);// * (_i + 1));
-            let _yy = _y + UsefullFunctions.lengthDirY(this.currentDirection - 180, 32);// * (_i + 1));
+            let _xx = _x + UsefullFunctions.lengthDirX(_dir - 180, 32);// * (_i + 1));
+            let _yy = _y + UsefullFunctions.lengthDirY(_dir - 180, 32);// * (_i + 1));
 
             _piece = new GameObject(this.stage, _xx, _yy, _sprite);
-            _piece.rotation = _direction;
+            _piece.rotation = _dir;
             this._bodyList.push(_piece);
         }
     }

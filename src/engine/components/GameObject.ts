@@ -116,13 +116,19 @@ export class GameObject {
     //- Visuals
     get sprite(): PIXI.Sprite { return this._sprite; }
     set sprite(_value: PIXI.Sprite) {
-        this._stage.removeChild(this._sprite);
-        this._sprite = _value; 
-        this._stage.addChild(this._sprite);
-        this._sprite.x = this.x;
-        this._sprite.y = this.y;
-        this._sprite.angle = this.rotation;
+
+        this._sprite.texture = _value.texture; 
+        
     }
+
+    // set sprite(_value: PIXI.Sprite) {
+    //     this._stage.removeChild(this._sprite);
+    //     this._sprite = _value; 
+    //     this._stage.addChild(this._sprite);
+    //     this._sprite.x = this.x;
+    //     this._sprite.y = this.y;
+    //     this._sprite.angle = this.rotation;
+    // }
 
     get width(): number { return this._width; }
     set width(_value: number) { this._rotation = _value; this._sprite.width = _value; }
