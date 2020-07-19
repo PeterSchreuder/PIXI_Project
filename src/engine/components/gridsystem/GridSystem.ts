@@ -1,3 +1,5 @@
+import * as PIXI from "pixi.js";
+
 import { Tile } from "./Tile";
 
 export class GridSystem {
@@ -25,7 +27,7 @@ export class GridSystem {
             this.gridArray[_x] = [];
             for (let _y = 0; _y < this.gridHeight; _y++)
             {
-                obj = new Tile(this.stage, _x * this.gridTileSize, _y * this.gridTileSize, PIXI.Sprite.from(PIXI.loader.resources.tile.texture));
+                obj = new Tile(this.stage, _x * this.gridTileSize, _y * this.gridTileSize, PIXI.Sprite.from(PIXI.Loader.shared.resources.tile.texture));
                 obj.anchor = {x: 0, y: 0};
                 this.gridArray[_x][_y] = obj;
             }

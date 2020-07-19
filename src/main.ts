@@ -4,14 +4,12 @@ import * as PIXI from "pixi.js"
 import {GameProperties} from "./utilities/GameProperties";
 import {GameLoop} from "./GameLoop";
 
-import RenderOptions = PIXI.RendererOptions;
-
 window.onload = () => onLoad();
 
 function onLoad(): void {
 
     //- Pre- load the Sprites
-    let loader = PIXI.loader;
+    let loader = PIXI.Loader.shared;
 
     loader
         .add("player", "player.png")
@@ -30,18 +28,12 @@ function onLoad(): void {
 
     //- Setup the game
     function setup(): void {
-
-        let rendererOptions: RenderOptions = {
-            backgroundColor: 0xAAAAAA,
-            resolution: 1,
-            
-        }
         
-        let app = PIXI.autoDetectRenderer(
-            GameProperties.levelWidth,
-            GameProperties.levelHeight,
-            rendererOptions
-        );
+        let app = new PIXI.Application({
+            width: GameProperties.levelWidth,
+            height: GameProperties.levelHeight,
+            backgroundColor: 0xAAAAAA
+        });
 
         let mainGameDiv = document.querySelector("#display");
 
