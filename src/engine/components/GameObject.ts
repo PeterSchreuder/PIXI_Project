@@ -57,13 +57,32 @@ export class GameObject {
 
     public getPointInDirection(_direction: number | undefined, _distance: number): object {
 
-        let obj = {x: 0, y: 0};
+        let _x = 0, _y = 0;
 
-        _direction *= (Math.PI / 180);
-        let _x = Math.cos(_direction) * _distance;
-        let _y = Math.sin(_direction) * _distance;
+        if (_direction) {
+
+            _direction *= (Math.PI / 180);
+            _x = Math.cos(_direction) * _distance;
+            _y = Math.sin(_direction) * _distance;  
+        }
+        
 
         return {x: Math.round(_x), y: Math.round(_y)};
+    }
+
+    public getPointInDirectionXY(_x: number, _y: number, _direction: number | undefined, _distance: number): object {
+
+        let _xx = 0, _yy = 0;
+
+        if (_direction) {
+
+            _direction *= (Math.PI / 180);
+            _xx = _x + (Math.cos(_direction) * _distance);
+            _yy = _y + (Math.sin(_direction) * _distance);  
+        }
+        
+
+        return {x: Math.round(_xx), y: Math.round(_yy)};
     }
 
     public update(): void {

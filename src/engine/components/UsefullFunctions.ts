@@ -1,4 +1,4 @@
-module UsefullFunctions {
+export module UsefullFunctions {
 
     export function lookTowardPoint(_x: number, _y: number, _x2: number, _y2: number): number {
         

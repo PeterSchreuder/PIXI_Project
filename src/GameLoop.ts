@@ -101,14 +101,14 @@ export class GameLoop implements UpdateableElement {
                     
                     let _direction = undefined;
                     if (inputManager.keyDown(vk_Keys.a) || inputManager.keyDown(vk_Keys.left)) _direction = 180;
-                    if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) _direction = 0;
+                    if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) _direction = 0.0001;
                     if (inputManager.keyDown(vk_Keys.w) || inputManager.keyDown(vk_Keys.up)) _direction = 270;
                     if (inputManager.keyDown(vk_Keys.s) || inputManager.keyDown(vk_Keys.down)) _direction = 90;
 
                     if (_direction != undefined)
                     {
                         _player.nextDirection = _direction;
-                        _player.speed = 2;
+                        _player.speed = 30;
                     }
 
                     if (_player.checkHitWall())
