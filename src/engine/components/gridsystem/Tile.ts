@@ -15,6 +15,24 @@ export class Tile extends GameObject {
         this._gridArrayY = _y + (this.height / 2);
 
         this._occupier = null;
+
+        this.tint = 0xbbbbbb;
+    }
+
+    public checkOccupied(_occupiend: GameObject) {
+
+        if (_occupiend == undefined)
+        {
+            console.log("NOT OCCUPIED")
+            this.occupier = null;
+            return;
+        }
+        
+        if (_occupiend.x == this.gridArrayX && _occupiend.y == this.gridArrayY)
+        {
+            console.log("-OCCUPIED")
+            this.occupier = _occupiend;
+        }       
     }
 
     get gridArrayX(): number { return this._gridArrayX; }
@@ -24,5 +42,17 @@ export class Tile extends GameObject {
     set gridArrayY(_value: number) { this._gridArrayY = _value; }
 
     get occupier(): GameObject | null { return this._occupier; }
-    set occupier(_value: GameObject | null) { this._occupier = _value }
+    set occupier(_value: GameObject | null) { 
+        
+        if (_value != null) {
+            this.sprite.tint = 0xFF0000;
+        }
+        else
+        {
+            this.sprite.tint = 0xbbbbbb;
+        }
+            
+
+        this._occupier = _value;
+    }
 }

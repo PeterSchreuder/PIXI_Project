@@ -1,12 +1,11 @@
 import * as PIXI from "pixi.js"
 
-import { InputManager } from "./InputManager";
-import { GameLoop } from "../../GameLoop";
 import { GameProperties } from "../../utilities/GameProperties";
+import { Tile } from "./gridsystem/Tile";
 
 export class GameObject {
 
-    public inputManager: InputManager;
+    private _tile: Tile | null;
 
     //- Position
     private _x: number;
@@ -24,17 +23,14 @@ export class GameObject {
 
     constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite)
     {
-        this.inputManager = GameLoop.prototype.getInputManager();
-        
         this._stage = _stage;
         this._sprite = _sprite;
+        this._tile = null;
 
         this._x = _x;
         this._y = _y;
         this._rotation = this._sprite.rotation;
 
-        
-        
         this._width = this._sprite.width;
         this._height = this._sprite.width;
         this._anchor = {x: this._sprite.anchor.x, y: this._sprite.anchor.y };
@@ -45,7 +41,6 @@ export class GameObject {
         this._sprite.anchor.set(0.5);
 
         this._stage.addChild(this._sprite);
-        
     }
 
     public moveDirection(_direction: number, _speed: number): void {
@@ -103,6 +98,9 @@ export class GameObject {
 
     get stage(): PIXI.Container { return this._stage; }
 
+    get tile(): Tile | null { return this._tile; }
+    set tile(_value: Tile | null) { this._tile = _value;}
+
     //- Positions
     get x(): number { return this._x; }
     set x(_value: number) { this._x = _value; this._sprite.x = _value; }
@@ -118,17 +116,7 @@ export class GameObject {
     set sprite(_value: PIXI.Sprite) {
 
         this._sprite.texture = _value.texture; 
-        
     }
-
-    // set sprite(_value: PIXI.Sprite) {
-    //     this._stage.removeChild(this._sprite);
-    //     this._sprite = _value; 
-    //     this._stage.addChild(this._sprite);
-    //     this._sprite.x = this.x;
-    //     this._sprite.y = this.y;
-    //     this._sprite.angle = this.rotation;
-    // }
 
     get width(): number { return this._width; }
     set width(_value: number) { this._rotation = _value; this._sprite.width = _value; }
@@ -145,10 +133,10 @@ export class GameObject {
         this._sprite.anchor.x = _value.x; this._sprite.anchor.y = _value.y; 
     }
 
-    private updateSprite(_variable: any, _variableSprite: any, _value: any) {
-        _variableSprite = _value;
-        _variable = _value;
-    }
+    // private updateSprite(_variable: any, _variableSprite: any, _value: any) {
+    //     _variableSprite = _value;
+    //     _variable = _value;
+    // }
 
     //#endregion
 

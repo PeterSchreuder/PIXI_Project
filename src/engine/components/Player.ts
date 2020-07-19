@@ -9,6 +9,7 @@ import { GridSystem } from "./gridsystem/GridSystem";
 
 import {Line} from "../../utilities/Line";
 import { UsefullFunctions } from "./UsefullFunctions";
+import { GameLoop } from "~GameLoop";
 
 export class Player extends GameObject {
 
@@ -19,17 +20,19 @@ export class Player extends GameObject {
 
     private _xx: number;
     private _yy: number;
-    private _timer: number;
+    private _interval: number | undefined;// When to update the player position
 
     private _bodyList: Array<GameObject>;
 
-    private _grid: GridSystem;
+    private _gameLoop: GameLoop;
 
     private _debugLines: boolean;
 
     private _lineArray: Map<string, PIXI.Graphics>;
 
-    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite, _grid: GridSystem)
+    private _canDebug: boolean;
+
+    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite, _gameLoop: GameLoop)
     {
         super(_stage, _x, _y, _sprite);
 
@@ -42,14 +45,19 @@ export class Player extends GameObject {
 
         this._speed = 0;
 
+        this._gameLoop = _gameLoop;
+
         this._bodyList = new Array<GameObject>();
+        this._bodyList.push(this);
         this.AddBodyObject(2, this.currentDirection);
 
-        this._timer = 0;
+        this._interval = 0;
 
-        this._grid = _grid;
+        
 
+        //- Debug
         this._debugLines = false;
+        this._canDebug = true;
 
         this._lineArray = new Map<string, PIXI.Graphics>();
         
@@ -69,7 +77,7 @@ export class Player extends GameObject {
         let _piece, _x = 0, _y = 0, _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture), _dir = _direction;
         let _size = this._bodyList.length | 0;
 
-        for (let _i = 0; _i < _amount; _i++) {
+        for (let _i = 1; _i < _amount + 1; _i++) {
             
             _i = this._bodyList.length;
             
@@ -101,6 +109,7 @@ export class Player extends GameObject {
 
             _piece = new GameObject(this.stage, _xx, _yy, _sprite);
             _piece.rotation = _dir;
+            this._gameLoop.addGameObject(_piece);
             this._bodyList.push(_piece);
         }
     }
@@ -110,6 +119,7 @@ export class Player extends GameObject {
         for (let i = _array.length - 1; i >= 0; i--) {
 
             let _body = _array[i];
+            
 
             if (i == 0)
             {
@@ -183,18 +193,19 @@ export class Player extends GameObject {
         if (this.currentDirection == undefined)
             this._currentDirection = this.nextDirection;
 
-        if (this.currentDirection != undefined && this.nextDirection != undefined && this._speed > 0)
+        if (this.currentDirection != undefined && this.nextDirection != undefined && this.speed > 0)
         {
-            this._timer++;
-            this._timer %= this._speed;
+            if (this.interval == undefined)
+                this._interval = 0;
 
-            if (this._timer == 0)
+            this._interval++;
+            this._interval %= this.speed;
+
+            if (this.interval == 0)
             {
                 
 
                 let _updateDirection = false;
-                
-                
 
                 let _val1 = Math.round(this.nextDirection);
                 let _val2 = Math.round(this.currentDirection)
@@ -224,11 +235,11 @@ export class Player extends GameObject {
                 let _y = _nextTileLocation.x;
 
                 this.UpdateBodyObject(this._bodyList);
-                
+
                 this.x += _nextTileLocation.x;
                 this.y += _nextTileLocation.y;
 
-
+                this.UpdateTiles();
 
                 if (this._debugLines) {
                     this.lineUpdate("0", [this.x, this.y, this.x + UsefullFunctions.lengthDirX(0, 100), this.y + UsefullFunctions.lengthDirY(0, 100)]);
@@ -242,6 +253,95 @@ export class Player extends GameObject {
             }
         }
     }
+
+    private UpdateTiles() {
+
+        // let _gridSystem = this._gameLoop.gridSystem;
+        
+        // let _x, _y, _tile;
+        // this._gameLoop.getGameObjects().forEach(_obj => {
+
+        //     if (_obj && _gridSystem)
+        //     {
+        //         _x = Math.floor(_obj.x / 32);
+        //         _y = Math.floor(_obj.y / 32);
+
+        //         _tile = _gridSystem.gridGetTile(_x, _y);
+    
+        //         if (_tile)
+        //         {
+        //             console.log(_tile);
+        //         }
+        //     }
+        // });
+
+        // _gridSystem.gridGetTiles().forEach()
+
+        // if (_gridSystem && this._canDebug)
+        // {
+        //     let _a = _gridSystem.gridGetTiles();
+            
+            
+
+        //     _a.forEach(_tile => {
+
+        //         console.log("Tile ", _tile);
+        //     });
+
+        //     console.log("Size: ", _a.length);
+        //     this._canDebug = false;
+        // }
+
+        // let _gridSystem: GridSystem;
+        // _gridSystem = this._gameLoop.getGridSystem();
+
+        // this._bodyList.forEach(_obj => {
+
+        //     if (_obj)
+        //     {
+        //         let _x = Math.floor(_obj.x / 32);
+        //         let _y = Math.floor(_obj.y / 32);
+        //         console.log(_obj.x, _x)
+        //         let _tile = _gridSystem.gridGetTile(_x, _y);
+                
+        //         if (_tile)
+        //         {
+        //             _tile.occupier = _obj;
+        //             _obj.tile = _tile;
+    
+        //             // (_obj == _player && _tile.occupier != _player)
+        //             // {
+        //             //     _player.speed = 0;
+        //             // }
+        //         } 
+        //     }
+        // });
+
+        // this._gameLoop.getGameObjects().forEach(_obj => {
+
+        //     if (_obj)
+        //     {
+        //         let _x = Math.floor(_obj.x / 32);
+        //         let _y = Math.floor(_obj.y / 32);
+        //         console.log(_obj.x, _x)
+        //         let _tile = this._gameLoop.getGridSystem().gridGetTile(_x, _y);
+    
+        //         if (_tile)
+        //         {
+        //             _tile.occupier = _obj;
+        //             _obj.tile = _tile;
+    
+        //             // (_obj == _player && _tile.occupier != _player)
+        //             // {
+        //             //     _player.speed = 0;
+        //             // }
+        //         } 
+        //     }
+            
+        // });
+    }
+
+    get interval(): number | undefined { return this._interval; }
 
     get speed(): number { return this._speed; }
     set speed(_value: number) { this._speed = _value; }

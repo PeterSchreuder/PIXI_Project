@@ -35,9 +35,11 @@ export class GameLoop implements UpdateableElement {
     public inputManager: InputManager;
     private textManager: TextManager;
 
-    private gridSystem: GridSystem | undefined;
+    private _gridSystem: GridSystem | undefined;
 
     private gameObjects = new Map<string, GameObject | Player>();
+
+    private _canDebug: boolean;
 
     //public systemAssets: {stage: PIXI.Container | undefined, inputManager: InputManager | undefined, textManager: TextManager | undefined, gameObjects: Map<string, GameObject | Player>};
 
@@ -54,16 +56,27 @@ export class GameLoop implements UpdateableElement {
 
         this.inputManager = new InputManager(document.querySelector("#display"), this.renderer);
         this.textManager = new TextManager(this.rootStage);
+
+        this.textManager.CreateText("FPS", 10, 5, this.renderer.ticker.FPS.toString(), {
+            fill: "#32CD32",
+            fontSize: 15,
+            lineJoin: "round",
+            strokeThickness: 1,
+            align: "right",
+        });
+
+        this._canDebug = true;
+
     }
 
     public setupGame(): void {
 
-        this.gridSystem = new GridSystem(this.rootStage, 17, 17, 32);
-        this.gridSystem.gridInit();
+        this._gridSystem = new GridSystem(this.rootStage, 17, 17, 32, this);
+        this._gridSystem.gridInit();
 
-        //this.gridSystem.gridGetTile(5,5).x += 5
+        //this._gridSystem.gridGetTile(5,5).x += 5
 
-        this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture)));
+        this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), this));
         
         //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
@@ -72,7 +85,7 @@ export class GameLoop implements UpdateableElement {
     }
 
     public update(): void {
-
+        
         let inputManager = this.inputManager;
 
         this.gameObjects.forEach(obj => {obj.update()});
@@ -97,25 +110,41 @@ export class GameLoop implements UpdateableElement {
                     
                     //#region Move the player
                     let _player = this.getGameObject("player");
-                    //let _player2 = this.getGameObject("player2");
                     
-                    let _direction = undefined;
-                    if (inputManager.keyDown(vk_Keys.a) || inputManager.keyDown(vk_Keys.left)) _direction = 180;
-                    if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) _direction = 0.0001;
-                    if (inputManager.keyDown(vk_Keys.w) || inputManager.keyDown(vk_Keys.up)) _direction = 270;
-                    if (inputManager.keyDown(vk_Keys.s) || inputManager.keyDown(vk_Keys.down)) _direction = 90;
+                    if (_player) {
 
-                    if (_direction != undefined)
-                    {
-                        _player.nextDirection = _direction;
-                        _player.speed = 15;
+                        let _direction = undefined;
+                        if (inputManager.keyDown(vk_Keys.a) || inputManager.keyDown(vk_Keys.left)) _direction = 180;
+                        if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) _direction = 0.0001;
+                        if (inputManager.keyDown(vk_Keys.w) || inputManager.keyDown(vk_Keys.up)) _direction = 270;
+                        if (inputManager.keyDown(vk_Keys.s) || inputManager.keyDown(vk_Keys.down)) _direction = 90;
+    
+                        if (_direction != undefined)
+                        {
+                            _player.nextDirection = _direction;
+                            _player.speed = 15;
+                        }
+    
+                        if (inputManager.keyUp(vk_Keys.space))
+                            this._canDebug = true;
+                            //_player.AddBodyObject(1, _player.currentDirection);
+    
+                        if (_player.checkHitWall())
+                            this.gameManager.gameStateCurrent = GameStates.Lose;
+
+                        if (_player.interval != undefined && _player.interval == 0)
+                        {
+                            this.UpdateTiles();
+                        }
                     }
 
-                    if (inputManager.keyUp(vk_Keys.space))
-                        _player.AddBodyObject(1, _player.currentDirection);
+                    
 
-                    if (_player.checkHitWall())
-                        this.gameManager.gameStateCurrent = GameStates.Lose;
+                    // for (let _x = 0; _x < this.gameObjects.size; _x++) {
+
+                    //     let _obj = this.gameObjects.get(this.gameObjects.)
+                    //     if ()
+                    // }
 
                 break;
 
@@ -131,53 +160,63 @@ export class GameLoop implements UpdateableElement {
 
                 break;
             }
-
         }
-        
-            
-
-        // let speed = 5, hsp = 0, vsp = 0;
-        // if (inputManager.keyDown(vk_Keys.a) || inputManager.keyDown(vk_Keys.left)) hsp = -1;
-        // if (inputManager.keyDown(vk_Keys.d) || inputManager.keyDown(vk_Keys.right)) hsp = 1;
-        // if (inputManager.keyDown(vk_Keys.w) || inputManager.keyDown(vk_Keys.up)) vsp = -1;
-        // if (inputManager.keyDown(vk_Keys.s) || inputManager.keyDown(vk_Keys.down)) vsp = 1;
-        
-        // hsp *= speed;
-        // vsp *= speed;
-        
-        // _player.x += hsp;
-        // _player.y += vsp;
-
-        // if (CollisionWithObject.collision(_player, _player2))
-        // {
-        //     console.log(1111111);
-        // }
-
-        //console.log(_player.x);
-        // _player.rotation = this.usefullFunctions.lookTowardPoint(_player.x, _player.y, inputManager.mouseX(), inputManager.mouseY());
-        // _player.rotation += 0.01;
-        // _player.rotation = 6.25
-        //console.log(_player.rotation)
-        //console.log(this.renderer.plugins.interaction.mouse.global.x);
 
         //#endregion
 
         this.inputManager.keysReset();
     }
 
-    public render(): void {
-        //let rootStage = new PIXI.Container();
+    private UpdateTiles() {
 
-        // ([
-        //     this.gameManager,
-        // ] as Array<RenderableElement>)
-        //     .map(element => element.getStage())
-        //     .forEach(stage => rootStage.addChild(stage));
+        let _gridSystem = this.gridSystem;
+        
+        let _x, _y, _tile;
+        this.getGameObjects().forEach(_obj => {
+
+            if (this._canDebug)
+            {
+                console.log(_obj);
+            }
+
+            if (_obj && _gridSystem)
+            {
+                _x = Math.floor(_obj.x / 32);
+                _y = Math.floor(_obj.y / 32);
+
+                _tile = _gridSystem.gridGetTile(_x, _y);
+    
+                if (_tile)
+                {
+                    //console.log(_tile);
+                    if (_obj.tile)
+                    {
+                        _obj.tile.occupier = null;
+                    }
+
+                    _obj.tile = _tile;
+                    _tile.occupier = _obj;
+                }
+            }
+        });
+
+        if (this._canDebug)
+        {
+            let _i = 0;
+            _gridSystem.gridGetTiles().forEach(_tile => {if (_tile.occupier != null) _i++; });
+            console.log("Amount", _i)
+            this._canDebug = false;
+        }
+        
+    }
+
+    public render(): void {
 
         this.renderer.renderer.render(this.rootStage);
-        //this.renderer.render(this.stages.background);
-        //this.renderer.render(this.stages.playingfield);
-        //this.renderer.render(this.stages.gui);
+    }
+
+    public addGameObject(_object: GameObject) {
+        this.gameObjects.set(this.gameObjects.size.toString(), _object);
     }
 
     public getGameObject(object: string): GameObject | Player | undefined {
@@ -190,10 +229,32 @@ export class GameLoop implements UpdateableElement {
         return _return;
     }
 
+    public getGameObjects(): Map<string, GameObject | Player | undefined>{
+        return this.gameObjects;
+    }
+
+    public getGameObjectOnPosition(_position: Array<number>): GameObject | Player | undefined{
+        let _return = undefined;
+
+        this.gameObjects.forEach(_obj => {
+            if (_obj.x == _position[0] && _obj.x == _position[1]) {
+                console.log(_obj)
+                _return = _obj;
+            }
+        });
+        
+        return _return;
+    }
+
+    get gridSystem(): GridSystem | undefined { return this._gridSystem; }
+
+    // public getGridSystem(): GridSystem | undefined {
+    //     return this._gridSystem;
+    // }
+    
     public getInputManager(): InputManager {
         console.log(this.inputManager)
         return this.inputManager;
-
     }
 
     public getStage(): PIXI.Container {
