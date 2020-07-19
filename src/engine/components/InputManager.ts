@@ -1,12 +1,13 @@
 import { vk_Keys } from "../../utilities/VirtualKeyboard";
+import { Application } from "pixi.js";
 
 export class InputManager {
 
     private keys: Map<number, boolean>;
     private mouse: {x: number, y: number};
-    private renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
+    private renderer: PIXI.Application;
 
-    constructor(mouseElement: any, renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer) {
+    constructor(mouseElement: any, renderer: PIXI.Application) {
 
         this.renderer = renderer;
 
@@ -42,8 +43,9 @@ export class InputManager {
         function setMousePosition(e: MouseEvent): void {
             //var rect = renderer.getBoundingClientRect();
 
-            mouse.x = renderer.plugins.interaction.mouse.global.x;//e.clientX - rect.left;
-            mouse.y = renderer.plugins.interaction.mouse.global.y;//e.clientY - rect.top;
+            //mouse.x = renderer.plugins.interaction.mouse.global.x;//e.clientX - rect.left;
+            //mouse.y = renderer.plugins.interaction.mouse.global.y;//e.clientY - rect.top;
+            
         }
     }
 

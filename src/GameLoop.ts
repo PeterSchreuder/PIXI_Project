@@ -22,7 +22,7 @@ import { GameStates } from "./utilities/GameStates";
 
 export class GameLoop implements UpdateableElement {
 
-    private readonly renderer: PIXI.CanvasRenderer | PIXI.WebGLRenderer;
+    private readonly renderer: PIXI.Application;
     
     private gameManager: GameManager | undefined;
 
@@ -41,7 +41,7 @@ export class GameLoop implements UpdateableElement {
 
     //public systemAssets: {stage: PIXI.Container | undefined, inputManager: InputManager | undefined, textManager: TextManager | undefined, gameObjects: Map<string, GameObject | Player>};
 
-    constructor (rendered: PIXI.CanvasRenderer | PIXI.WebGLRenderer) {
+    constructor (rendered: PIXI.Application) {
 
         this.renderer = rendered;
         this.rootStage = new PIXI.Container();
@@ -63,7 +63,7 @@ export class GameLoop implements UpdateableElement {
 
         //this.gridSystem.gridGetTile(5,5).x += 5
 
-        this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
+        this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture)));
         
         //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
@@ -169,7 +169,7 @@ export class GameLoop implements UpdateableElement {
         //     .map(element => element.getStage())
         //     .forEach(stage => rootStage.addChild(stage));
 
-        this.renderer.render(this.rootStage);
+        this.renderer.renderer.render(this.rootStage);
         //this.renderer.render(this.stages.background);
         //this.renderer.render(this.stages.playingfield);
         //this.renderer.render(this.stages.gui);
