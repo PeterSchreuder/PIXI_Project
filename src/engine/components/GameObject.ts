@@ -111,7 +111,7 @@ export class GameObject {
     set y(_value: number) { this._y = _value; this._sprite.y = _value; }
 
     get rotation(): number { return this._rotation; }
-    set rotation(_value: number) { _value *= (Math.PI / 180); this._rotation = _value; this._sprite.rotation = _value; }
+    set rotation(_value: number) { this._rotation = _value; this._sprite.angle = _value; }
 
     //- Visuals
     get sprite(): PIXI.Sprite { return this._sprite; }

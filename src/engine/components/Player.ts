@@ -33,8 +33,9 @@ export class Player extends GameObject {
     {
         super(_stage, _x, _y, _sprite);
 
-        this._currentDirection = undefined;
+        this._currentDirection = 90;
         this._nextDirection = this.currentDirection;
+        this.rotation = this.currentDirection;
 
         this._xx = 0;
         this._yy = 0;
@@ -42,7 +43,7 @@ export class Player extends GameObject {
         this._speed = 0;
 
         this._bodyList = new Array<GameObject>();
-        //this.AddBodyObject(2);
+        this.AddBodyObject(2, this.currentDirection);
 
         this._timer = 0;
 
@@ -63,32 +64,40 @@ export class Player extends GameObject {
         }
     }
 
-    public AddBodyObject(_amount: number) {
+    public AddBodyObject(_amount: number, _direction: number) {
 
         let _piece;
 
-        for (let index = 0; index < _amount; index++) {
+        for (let _i = 0; _i < _amount; _i++) {
             
-            _piece = new GameObject(this.stage, this.x, this.y, PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture));
+            let _x = this.x + UsefullFunctions.lengthDirX(this.currentDirection - 180, 32 * (_i + 1));
+            let _y = this.y + UsefullFunctions.lengthDirY(this.currentDirection - 180, 32 * (_i + 1));
+
+            _piece = new GameObject(this.stage, _x, _y, PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture));
+            _piece.rotation = _direction;
             this._bodyList.push(_piece);
         }
     }
 
     private UpdateBodyObject(_array: Array<GameObject>) {
 
-        for (let i = 0; i < _array.length; i++) {
+        for (let i = _array.length - 1; i >= 0; i--) {
+
+            let _body = _array[i];
 
             if (i == 0)
             {
-                let _pos = this.getPointInDirection(this.currentDirection, this.width);
-                //console.log(_pos)
-                _array[i].x = this.x + _pos.x;
-                _array[i].y = this.y + _pos.y;
+                _body.rotation = this.currentDirection;
+                _body.x = this.x;
+                _body.y = this.y;
             }
             else
             {
-                _array[i].x = _array[i - 1].x - this.width;
-                _array[i].y = _array[i - 1].y - this.height;
+                let _body2 = _array[i - 1];
+
+                _body.rotation = _body2.rotation;
+                _body.x = _body2.x;
+                _body.y = _body2.y;
             }
         }
     }
@@ -138,7 +147,7 @@ export class Player extends GameObject {
 
     public update() {
         
-        //this.UpdateBodyObject(this._bodyList);
+        
 
         // When the game has started. Set the current direction by the players first input
         if (this.currentDirection == undefined)
@@ -151,6 +160,8 @@ export class Player extends GameObject {
 
             if (this._timer == 0)
             {
+                
+
                 let _updateDirection = false;
                 
                 
@@ -181,6 +192,8 @@ export class Player extends GameObject {
                 let _nextTileLocation = this.getPointInDirection(this.currentDirection, this.width);
                 let _x = _nextTileLocation.x;
                 let _y = _nextTileLocation.x;
+
+                this.UpdateBodyObject(this._bodyList);
                 
                 this.x += _nextTileLocation.x;
                 this.y += _nextTileLocation.y;
@@ -203,7 +216,13 @@ export class Player extends GameObject {
     get speed(): number { return this._speed; }
     set speed(_value: number) { this._speed = _value; }
 
-    get currentDirection(): number | undefined { return this._currentDirection; }
+    get currentDirection(): number | 0 { 
+        
+        if (this._currentDirection == undefined)
+            return 0;
+        else
+            return this._currentDirection; 
+    }
 
     get nextDirection(): number | undefined { return this._nextDirection; }
     set nextDirection(_value: number | undefined) { this._nextDirection = _value; console.log("UPDATED")}
