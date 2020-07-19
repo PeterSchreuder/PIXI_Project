@@ -90,6 +90,8 @@ export class GameLoop implements UpdateableElement {
 
         this.gameObjects.forEach(obj => {obj.update()});
         
+        let _player;
+
         if (this.gameManager) {
 
             this.gameManager.update();
@@ -109,7 +111,7 @@ export class GameLoop implements UpdateableElement {
                 case GameStates.Mid:
                     
                     //#region Move the player
-                    let _player = this.getGameObject("player");
+                    _player = this.getGameObject("player");
                     
                     if (_player) {
 
@@ -126,15 +128,14 @@ export class GameLoop implements UpdateableElement {
                         }
     
                         if (inputManager.keyUp(vk_Keys.space))
-                            this._canDebug = true;
-                            //_player.AddBodyObject(1, _player.currentDirection);
+                            _player.AddBodyObject(1, _player.currentDirection);
     
                         if (_player.checkHitWall())
                             this.gameManager.gameStateCurrent = GameStates.Lose;
 
                         if (_player.interval != undefined && _player.interval == 0)
                         {
-                            this.UpdateTiles();
+                            this.UpdateTiles(_player);
                         }
                     }
 
@@ -151,12 +152,23 @@ export class GameLoop implements UpdateableElement {
                 case GameStates.Win:
 
                     //
+                    _player = this.getGameObject("player");
+                    
+                    if (_player) {
+                        _player.speed = 0;
+                    }
 
                 break;
 
                 case GameStates.Lose:
 
                     //
+                    _player = this.getGameObject("player");
+                    
+                    if (_player) {
+                        _player.speed = 0;
+                    }
+
 
                 break;
             }
@@ -167,17 +179,18 @@ export class GameLoop implements UpdateableElement {
         this.inputManager.keysReset();
     }
 
-    private UpdateTiles() {
+    private UpdateTiles(_player: Player) {
 
         let _gridSystem = this.gridSystem;
         
         let _x, _y, _tile;
         this.getGameObjects().forEach(_obj => {
 
-            if (this._canDebug)
-            {
-                console.log(_obj);
-            }
+            // if (this._canDebug)
+            // {
+            //     console.log(_obj);
+            //     this._canDebug = false;
+            // }
 
             if (_obj && _gridSystem)
             {
@@ -188,7 +201,20 @@ export class GameLoop implements UpdateableElement {
     
                 if (_tile)
                 {
-                    //console.log(_tile);
+                    // Check what kind of tile it is
+                    if (_obj == _player)
+                    {
+                        console.log(_obj.constructor.name, "==", _player.constructor.name)
+                        if (_tile.occupier && _tile.occupier != _player)
+                        {
+                            console.log(_tile.occupier.constructor.name, "!=", _player.constructor.name)
+                            this.gameManager.gameStateCurrent = GameStates.Lose;
+                            return;
+                        }
+                    }
+
+
+                    // Erase this _obj from its previous tile
                     if (_obj.tile)
                     {
                         _obj.tile.occupier = null;
@@ -196,18 +222,19 @@ export class GameLoop implements UpdateableElement {
 
                     _obj.tile = _tile;
                     _tile.occupier = _obj;
+
+                    
                 }
             }
         });
 
-        if (this._canDebug)
-        {
-            let _i = 0;
-            _gridSystem.gridGetTiles().forEach(_tile => {if (_tile.occupier != null) _i++; });
-            console.log("Amount", _i)
-            this._canDebug = false;
-        }
-        
+        // if (this._canDebug)
+        // {
+        //     let _i = 0;
+        //     _gridSystem.gridGetTiles().forEach(_tile => {if (_tile.occupier != null) _i++; });
+        //     console.log("Amount", _i)
+        //     this._canDebug = false;
+        // }
     }
 
     public render(): void {
