@@ -108,8 +108,11 @@ export class GameLoop implements UpdateableElement {
                     if (_direction != undefined)
                     {
                         _player.nextDirection = _direction;
-                        _player.speed = 30;
+                        _player.speed = 15;
                     }
+
+                    if (inputManager.keyUp(vk_Keys.space))
+                        _player.AddBodyObject(1, _player.currentDirection);
 
                     if (_player.checkHitWall())
                         this.gameManager.gameStateCurrent = GameStates.Lose;
@@ -158,6 +161,8 @@ export class GameLoop implements UpdateableElement {
         //console.log(this.renderer.plugins.interaction.mouse.global.x);
 
         //#endregion
+
+        this.inputManager.keysReset();
     }
 
     public render(): void {

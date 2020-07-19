@@ -66,14 +66,31 @@ export class Player extends GameObject {
 
     public AddBodyObject(_amount: number, _direction: number) {
 
-        let _piece;
+        let _piece, _x = 0, _y = 0, _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture);
 
         for (let _i = 0; _i < _amount; _i++) {
             
-            let _x = this.x + UsefullFunctions.lengthDirX(this.currentDirection - 180, 32 * (_i + 1));
-            let _y = this.y + UsefullFunctions.lengthDirY(this.currentDirection - 180, 32 * (_i + 1));
+            _i = this._bodyList.length;
+            
 
-            _piece = new GameObject(this.stage, _x, _y, PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture));
+            if (_i == 0)
+            {
+                _x = this.x;
+                _y = this.y;
+            }
+            else
+            {
+                _x = this._bodyList[_i - 1].x;
+                _y = this._bodyList[_i - 1].y;
+
+                if (_i == _amount - 1)
+                    _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.bodyEnd.texture);
+            }
+
+            let _xx = _x + UsefullFunctions.lengthDirX(this.currentDirection - 180, 32);// * (_i + 1));
+            let _yy = _y + UsefullFunctions.lengthDirY(this.currentDirection - 180, 32);// * (_i + 1));
+
+            _piece = new GameObject(this.stage, _xx, _yy, _sprite);
             _piece.rotation = _direction;
             this._bodyList.push(_piece);
         }
@@ -90,6 +107,7 @@ export class Player extends GameObject {
                 _body.rotation = this.currentDirection;
                 _body.x = this.x;
                 _body.y = this.y;
+                
             }
             else
             {
@@ -98,6 +116,9 @@ export class Player extends GameObject {
                 _body.rotation = _body2.rotation;
                 _body.x = _body2.x;
                 _body.y = _body2.y;
+
+                // if (i == _array.length - 1)
+                //     _body.sprite.tint = 0xFF0000;
             }
         }
     }

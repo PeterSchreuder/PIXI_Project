@@ -119,16 +119,19 @@ export class GameObject {
         this._stage.removeChild(this._sprite);
         this._sprite = _value; 
         this._stage.addChild(this._sprite);
+        this._sprite.x = this.x;
+        this._sprite.y = this.y;
+        this._sprite.angle = this.rotation;
     }
 
     get width(): number { return this._width; }
-    set width(_value: number) { this._rotation = _value; this._sprite.rotation = _value; }
+    set width(_value: number) { this._rotation = _value; this._sprite.width = _value; }
 
     get height(): number { return this._height; }
-    set height(_value: number) { this._rotation = _value; this._sprite.rotation = _value; }
+    set height(_value: number) { this._rotation = _value; this._sprite.height = _value; }
 
     get tint(): number { return this._tint; }
-    set tint(_value: number) { this._tint = _value; this._sprite.rotation = _value; }
+    set tint(_value: number) { this._tint = _value; this._sprite.tint = _value; }
 
     get anchor(): object { return this._anchor; }
     set anchor(_value: object) { 

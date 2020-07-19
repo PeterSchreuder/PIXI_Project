@@ -81,10 +81,18 @@ export class InputManager {
         
         let _return = false;
 
-        if (this.keys.has(_value) && this.keys.get(_value) == false)
+        if (this.keys.get(_value))
             _return = true;
 
         return _return;
+    }
+
+    public keysReset() {
+        
+        for (let i = 0; i < this.keys.size; i++) {
+            
+            this.keys.set(i, false);
+        }
     }
 }
 

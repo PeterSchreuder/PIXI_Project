@@ -13,6 +13,7 @@ function onLoad(): void {
 
     loader
         .add("body", "body.png")
+        .add("bodyEnd", "bodyEnd.png")
         .add("player", "player.png")
         .add("tile", "tile.png");
         
