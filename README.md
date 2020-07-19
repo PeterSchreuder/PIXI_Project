@@ -1,4 +1,4 @@
-# PIXI_Project
+# Snake in PIXIjs
 Classic Snake style game made in **PIXIjs**.<br>
 
 **Documents:**<br>
