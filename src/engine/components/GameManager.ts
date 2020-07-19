@@ -72,6 +72,15 @@ export class GameManager {
                 });
                 this._logo.anchor.set(0.5);
 
+                _midText = this.textManager.CreateText("Name", GameProperties.levelMidX, GameProperties.levelMidY - 120, "By: Peter Schreuder", {
+                    fill: "#ffa200",
+                    fontSize: 20,
+                    lineJoin: "round",
+                    strokeThickness: 5,
+                    align: "center",
+                });
+                _midText.anchor.set(0.5);
+
                 _midText = this.textManager.CreateText("Warning", GameProperties.levelMidX, GameProperties.levelMidY, "Full version will be available tonight.\nCrucially missing:\n- Item pickup\n- Win state\n- Lose state\n", {
                     fill: "#ff0000",
                     fontSize: 20,
@@ -170,7 +179,7 @@ export class GameManager {
             case GameStates.Begin:
                 
                 this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, GameProperties.levelMidY - 150, "Snake Game", {
-                    fill: "#ffa200",
+                    fill: "#f00000",
                     fontSize: 50,
                     lineJoin: "round",
                     strokeThickness: 10,
@@ -181,14 +190,27 @@ export class GameManager {
                 });
                 this._logo.anchor.set(0.5);
 
-                let _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, GameProperties.levelMidY + 100, "Press Enter to Start", {
+                let _midText = this.textManager.CreateText("Name", GameProperties.levelMidX, GameProperties.levelMidY - 118, "By: Peter Schreuder", {
+                    fill: "#ffa200",
+                    fontSize: 20,
+                    lineJoin: "round",
+                    strokeThickness: 5,
+                    align: "center",
+                    dropShadow: true,
+                    dropShadowAngle: this._timer,
+                    dropShadowDistance: 2
+                });
+                _midText.anchor.set(0.5);
+
+                _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, GameProperties.levelMidY + 100, "Press Enter to Start", {
                     fill: "#ffa200",
                     fontSize: 30 ,
                     lineJoin: "round",
                     strokeThickness: 5,
                     align: "center",
                     dropShadow: true,
-                    dropShadowAngle: this._timer
+                    dropShadowAngle: this._timer,
+                    dropShadowDistance: 2
                 });
                 _midText.anchor.set(0.5);
 
