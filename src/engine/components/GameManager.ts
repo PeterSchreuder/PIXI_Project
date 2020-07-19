@@ -17,6 +17,10 @@ export class GameManager {
 
     private inputManager: InputManager;
 
+    private _logo: PIXI.Text | undefined;
+
+    private _timer: number;
+
     constructor (_stage: PIXI.Container, _inputManager: InputManager) {
 
         this._stage = _stage;
@@ -28,6 +32,8 @@ export class GameManager {
         this.textManager = new TextManager(_stage);
 
         this.gameStateCurrent = GameStates.Begin;
+
+        this._timer = 0;
     }
 
     get gameStateCurrent(): GameStates { return this._gameStateCurrent; }
@@ -36,6 +42,8 @@ export class GameManager {
         this._gameStatePrev = this.gameStateCurrent;
         this._gameStateCurrent = _value; 
         let _midText;
+
+
 
         //- This is run once when the state has been changed
         switch (_value)
@@ -52,7 +60,37 @@ export class GameManager {
                     strokeThickness: 5
                 });
 
+                this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, GameProperties.levelMidY - 150, "Snake Game", {
+                    fill: "#ffa200",
+                    fontSize: 50,
+                    lineJoin: "round",
+                    strokeThickness: 10,
+                    align: "center",
+                    fontFamily: 'Arial Black',
+                    dropShadow: true,
+                    dropShadowAngle: 90
+                });
+                this._logo.anchor.set(0.5);
+
+                _midText = this.textManager.CreateText("Warning", GameProperties.levelMidX, GameProperties.levelMidY, "Full version will be available tonight.\nCrucially missing:\n- Item pickup\n- Win state\n- Lose state\n", {
+                    fill: "#ff0000",
+                    fontSize: 20,
+                    lineJoin: "round",
+                    strokeThickness: 5,
+                    align: "center",
+                });
+                _midText.anchor.set(0.5);
+
                 _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, GameProperties.levelMidY + 100, "Press Enter to Start", {
+                    fill: "#ffa200",
+                    fontSize: 30 ,
+                    lineJoin: "round",
+                    strokeThickness: 5,
+                    align: "center",
+                });
+                _midText.anchor.set(0.5);
+
+                _midText = this.textManager.CreateText("Info", GameProperties.levelMidX, GameProperties.levelMidY + 150, "'Space' to increase body size", {
                     fill: "#ffa200",
                     fontSize: 20,
                     lineJoin: "round",
@@ -124,10 +162,35 @@ export class GameManager {
 
     public update(): void {
 
+        this._timer += 0.053;
+        this._timer %= 360;
+
         switch (this.gameStateCurrent)
         {
             case GameStates.Begin:
                 
+                this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, GameProperties.levelMidY - 150, "Snake Game", {
+                    fill: "#ffa200",
+                    fontSize: 50,
+                    lineJoin: "round",
+                    strokeThickness: 10,
+                    align: "center",
+                    fontFamily: 'Arial Black',
+                    dropShadow: true,
+                    dropShadowAngle: this._timer
+                });
+                this._logo.anchor.set(0.5);
+
+                let _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, GameProperties.levelMidY + 100, "Press Enter to Start", {
+                    fill: "#ffa200",
+                    fontSize: 30 ,
+                    lineJoin: "round",
+                    strokeThickness: 5,
+                    align: "center",
+                    dropShadow: true,
+                    dropShadowAngle: this._timer
+                });
+                _midText.anchor.set(0.5);
 
                 if (this.inputManager.keyDown(vk_Keys.enter))
                     this.gameStateCurrent = GameStates.Mid;
