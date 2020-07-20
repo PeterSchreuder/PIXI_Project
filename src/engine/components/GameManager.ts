@@ -81,7 +81,7 @@ export class GameManager {
                 });
                 _midText.anchor.set(0.5);
 
-                _midText = this.textManager.CreateText("Warning", GameProperties.levelMidX, GameProperties.levelMidY, "Full version will be available tonight.\nCrucially missing:\n- Item pickup\n- Win state\n- Lose state\n", {
+                _midText = this.textManager.CreateText("Warning", GameProperties.levelMidX, GameProperties.levelMidY, "Full version will be available tonight.\nCrucially missing:\n- Item pickup", {
                     fill: "#ff0000",
                     fontSize: 20,
                     lineJoin: "round",
