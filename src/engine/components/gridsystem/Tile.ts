@@ -7,7 +7,9 @@ export class Tile extends GameObject {
     private _gridArrayX: number;
     private _gridArrayY: number;
 
-    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite) {
+    private _id: string;
+
+    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite, _id: string) {
 
         super(_stage, _x, _y, _sprite);
 
@@ -17,6 +19,8 @@ export class Tile extends GameObject {
         this._occupier = null;
 
         this.tint = 0xbbbbbb;
+
+        this._id = _id;
     }
 
     public checkOccupied(_occupiend: GameObject) {
@@ -35,6 +39,8 @@ export class Tile extends GameObject {
         }       
     }
 
+    get id(): string { return this._id; };
+
     get gridArrayX(): number { return this._gridArrayX; }
     set gridArrayX(_value: number) { this._gridArrayX = _value; }
 
@@ -44,13 +50,13 @@ export class Tile extends GameObject {
     get occupier(): GameObject | null { return this._occupier; }
     set occupier(_value: GameObject | null) { 
         
-        if (_value != null) {
-            this.sprite.tint = 0xFF0000;
-        }
-        else
-        {
-            this.sprite.tint = 0xbbbbbb;
-        }
+        // if (_value != null) {
+        //     this.sprite.tint = 0xFF0000;
+        // }
+        // else
+        // {
+        //     this.sprite.tint = 0xbbbbbb;
+        // }
             
 
         this._occupier = _value;

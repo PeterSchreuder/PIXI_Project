@@ -10,6 +10,7 @@ import { GridSystem } from "./gridsystem/GridSystem";
 import {Line} from "../../utilities/Line";
 import { UsefullFunctions } from "./UsefullFunctions";
 import { GameLoop } from "~GameLoop";
+import { ObjectTypes } from "../../utilities/Enums";
 
 export class Player extends GameObject {
 
@@ -32,9 +33,9 @@ export class Player extends GameObject {
 
     private _canDebug: boolean;
 
-    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite, _gameLoop: GameLoop)
+    constructor(_stage: PIXI.Container, _x: number, _y: number, _sprite: PIXI.Sprite, _type: ObjectTypes, _gameLoop: GameLoop)
     {
-        super(_stage, _x, _y, _sprite);
+        super(_stage, _x, _y, _sprite, _type);
 
         this._currentDirection = 90;
         this._nextDirection = this.currentDirection;
@@ -72,15 +73,19 @@ export class Player extends GameObject {
         }
     }
 
-    public AddBodyObject(_amount: number, _direction: number) {
+    public AddBodyObject(_amount: number, _direction?: number | undefined) {
 
         let _piece, _x = 0, _y = 0, _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture), _dir = _direction;
         let _size = this._bodyList.length | 0;
+
+        
 
         for (let _i = 1; _i < _amount + 1; _i++) {
             
             _i = this._bodyList.length;
             
+            if (_dir == undefined)
+                _dir = this._bodyList[_i - 1].rotation;
 
             if (_i == 0)
             {
@@ -107,7 +112,7 @@ export class Player extends GameObject {
             let _xx = _x + UsefullFunctions.lengthDirX(_dir - 180, 32);// * (_i + 1));
             let _yy = _y + UsefullFunctions.lengthDirY(_dir - 180, 32);// * (_i + 1));
 
-            _piece = new GameObject(this.stage, _xx, _yy, _sprite);
+            _piece = new GameObject(this.stage, _xx, _yy, _sprite, ObjectTypes.Body);
             _piece.rotation = _dir;
             this._gameLoop.addGameObject(_piece);
             this._bodyList.push(_piece);
