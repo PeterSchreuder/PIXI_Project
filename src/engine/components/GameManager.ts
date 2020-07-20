@@ -86,14 +86,14 @@ export class GameManager {
                 });
                 _midText.anchor.set(0.5);
 
-                _midText = this.textManager.CreateText("Warning", GameProperties.levelMidX, GameProperties.levelMidY, "Full version will be available tonight.\nCrucially missing:\n- Item pickup", {
-                    fill: "#ff0000",
-                    fontSize: 20,
-                    lineJoin: "round",
-                    strokeThickness: 5,
-                    align: "center",
-                });
-                _midText.anchor.set(0.5);
+                // _midText = this.textManager.CreateText("Warning", GameProperties.levelMidX, GameProperties.levelMidY, "Full version will be available tonight.\nCrucially missing:\n- Item pickup", {
+                //     fill: "#ff0000",
+                //     fontSize: 20,
+                //     lineJoin: "round",
+                //     strokeThickness: 5,
+                //     align: "center",
+                // });
+                // _midText.anchor.set(0.5);
 
                 _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, GameProperties.levelMidY + 100, "Press Enter to Start", {
                     fill: "#ffa200",
@@ -104,12 +104,15 @@ export class GameManager {
                 });
                 _midText.anchor.set(0.5);
 
-                _midText = this.textManager.CreateText("Info", GameProperties.levelMidX, GameProperties.levelMidY + 150, "'Space' to increase body size", {
+                _midText = this.textManager.CreateText("Info", GameProperties.levelMidX, GameProperties.levelMidY + 150, "'W.A.S.D' or the 'Arrow keys' to move", {
                     fill: "#ffa200",
                     fontSize: 20,
                     lineJoin: "round",
                     strokeThickness: 5,
                     align: "center",
+                    dropShadow: true,
+                    dropShadowAngle: 90,
+                    dropShadowBlur: 3
                 });
                 _midText.anchor.set(0.5);
 
@@ -163,12 +166,27 @@ export class GameManager {
                     strokeThickness: 5
                 });
 
-                _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, GameProperties.levelMidY + 100, "Game Over\nPress Enter to Restart", {
+                this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, 5.5 * 32, "Game Over", {
+                    fill: "#ff0000",
+                    fontSize: 75,
+                    lineJoin: "round",
+                    strokeThickness: 10,
+                    align: "center",
+                    fontFamily: 'Arial Black',
+                    dropShadow: true,
+                    dropShadowAngle: 90
+                });
+                this._logo.anchor.set(0.5);
+
+                _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, 12.5 * 32, "Press Enter to Restart", {
                     fill: "#ffa200",
                     fontSize: 20,
                     lineJoin: "round",
                     strokeThickness: 5,
                     align: "center",
+                    dropShadow: true,
+                    dropShadowAngle: 90,
+                    dropShadowBlur: 3
                 });
                 _midText.anchor.set(0.5);
 
@@ -186,7 +204,7 @@ export class GameManager {
             case GameStates.Begin:
                 
                 this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, GameProperties.levelMidY - 150, "Snake Game", {
-                    fill: "#f00000",
+                    fill: "#ffa222",
                     fontSize: 50,
                     lineJoin: "round",
                     strokeThickness: 10,
@@ -240,6 +258,18 @@ export class GameManager {
             break;
 
             case GameStates.Lose:
+
+                this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, 5 * 32, "Game Over", {
+                    fill: "#ff0000",
+                    fontSize: 75,
+                    lineJoin: "round",
+                    strokeThickness: 10,
+                    align: "center",
+                    fontFamily: 'Arial Black',
+                    dropShadow: true,
+                    dropShadowAngle: this._timer
+                });
+                this._logo.anchor.set(0.5);
 
                 if (this.inputManager.keyDown(vk_Keys.enter))
                 {
