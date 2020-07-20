@@ -17,8 +17,10 @@ import { CollisionWithObject } from "./utilities/CollisionWithSprite";
 
 import {vk_Keys} from "./utilities/VirtualKeyboard";
 
-import {GameManager} from "./engine/components/GameManager"
+import {GameManager} from "./engine/components/GameManager";
 import { GameStates } from "./utilities/GameStates";
+import { Tile } from "./engine/components/gridsystem/Tile";
+import { ObjectTypes } from "./utilities/Enums";
 
 export class GameLoop implements UpdateableElement {
 
@@ -40,6 +42,8 @@ export class GameLoop implements UpdateableElement {
     private gameObjects = new Map<string, GameObject | Player>();
 
     private _canDebug: boolean;
+
+    private _availableTiles: Map<string, Tile>;
 
     //public systemAssets: {stage: PIXI.Container | undefined, inputManager: InputManager | undefined, textManager: TextManager | undefined, gameObjects: Map<string, GameObject | Player>};
 
@@ -67,6 +71,8 @@ export class GameLoop implements UpdateableElement {
 
         this._canDebug = true;
 
+        this._availableTiles = new Map<string, Tile>();
+
     }
 
     public setupGame(): void {
@@ -76,7 +82,7 @@ export class GameLoop implements UpdateableElement {
 
         //this._gridSystem.gridGetTile(5,5).x += 5
 
-        this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), this));
+        this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Player, this));
         
         //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
         
@@ -183,7 +189,7 @@ export class GameLoop implements UpdateableElement {
 
         let _gridSystem = this.gridSystem;
         
-        let _x, _y, _tile;
+        let _x, _y, _listTile;
         this.getGameObjects().forEach(_obj => {
 
             // if (this._canDebug)
@@ -197,19 +203,31 @@ export class GameLoop implements UpdateableElement {
                 _x = Math.floor(_obj.x / 32);
                 _y = Math.floor(_obj.y / 32);
 
-                _tile = _gridSystem.gridGetTile(_x, _y);
+                _listTile = _gridSystem.gridGetTile(_x, _y);
     
-                if (_tile)
+                if (_listTile)
                 {
                     // Check what kind of tile it is
                     if (_obj == _player)
                     {
-                        console.log(_obj.constructor.name, "==", _player.constructor.name)
-                        if (_tile.occupier && _tile.occupier != _player)
+                        //console.log(_obj.constructor.name, "==", _player.constructor.name)
+
+                        //
+                        if (_listTile.occupier && _listTile.occupier != _player)
                         {
-                            console.log(_tile.occupier.constructor.name, "!=", _player.constructor.name)
-                            this.gameManager.gameStateCurrent = GameStates.Lose;
-                            return;
+                            // Check what the player collided with
+                            switch (_listTile.occupier.type)
+                            {
+                                case ObjectTypes.Body:// Body is Gameover
+
+                                    //console.log(_listTile.occupier.constructor.name, "!=", _player.constructor.name)
+                                    
+                                    if (this.gameManager)
+                                        this.gameManager.gameStateCurrent = GameStates.Lose;
+                                    //return;
+
+                                break;
+                            }
                         }
                     }
 
@@ -218,10 +236,23 @@ export class GameLoop implements UpdateableElement {
                     if (_obj.tile)
                     {
                         _obj.tile.occupier = null;
+                        this.availableTiles.set(_obj.tile.id, _obj.tile);//
                     }
 
-                    _obj.tile = _tile;
-                    _tile.occupier = _obj;
+
+                    // Add each other
+                    _obj.tile = _listTile;
+                    _listTile.occupier = _obj;
+
+                    // Remove Tile from the list
+                    let _id = _listTile.id;
+                    let _index = this.availableTiles.has(_id);
+
+                    if (_index != undefined)
+                    {
+                        this.availableTiles.delete(_id);
+                        console.log("Removed index:", _index);
+                    }
 
                     
                 }
@@ -287,4 +318,6 @@ export class GameLoop implements UpdateableElement {
     public getStage(): PIXI.Container {
         return this.rootStage;
     }
+
+    get availableTiles(): Map<string, Tile> { return this._availableTiles; };
 }

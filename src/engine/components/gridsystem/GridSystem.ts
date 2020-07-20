@@ -25,6 +25,7 @@ export class GridSystem {
     public gridInit() {
 
         let obj = null;
+        let _idCounter = 0;
         for (let _x = 0; _x < this.gridWidth; _x++)
         {
             this.gridArray[_x] = [];
@@ -32,9 +33,11 @@ export class GridSystem {
             for (let _y = 0; _y < this.gridHeight; _y++)
             {
                 
-                obj = new Tile(this.stage, _x * this.gridTileSize, _y * this.gridTileSize, PIXI.Sprite.from(PIXI.Loader.shared.resources.tile.texture));
+                obj = new Tile(this.stage, _x * this.gridTileSize, _y * this.gridTileSize, PIXI.Sprite.from(PIXI.Loader.shared.resources.tile.texture), _idCounter.toString());
                 obj.anchor = {x: 0, y: 0};
                 this.gridArray[_x][_y] = obj;
+
+                _idCounter++;
             }
         }
 
