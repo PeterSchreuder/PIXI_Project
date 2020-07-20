@@ -81,6 +81,10 @@ export class GameLoop implements UpdateableElement {
         this._gridSystem = new GridSystem(this.rootStage, 17, 17, 32, this);
         this._gridSystem.gridInit();
 
+        this._gridSystem.gridGetTiles().forEach(_tile => {
+            this.availableTiles.set(_tile.id, _tile);
+        })
+
         this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Player, this));
         
         this.gameManager = new GameManager(this.rootStage, this.inputManager, this);
@@ -125,8 +129,8 @@ export class GameLoop implements UpdateableElement {
                             _player.speed = 15;
                         }
     
-                        if (inputManager.keyUp(vk_Keys.space))
-                            this.createRandomPickup();
+                        // if (inputManager.keyUp(vk_Keys.space))
+                        //     this.createRandomPickup();
                             //_player.AddBodyObject(1, _player.currentDirection);
     
                         if (_player.checkHitWall())
@@ -214,7 +218,7 @@ export class GameLoop implements UpdateableElement {
                                         case PickupTypes.LengthIncrease:
 
                                             _player.AddBodyObject(1);
-
+                                            this.createRandomPickup();
 
                                         break;
                                     }
