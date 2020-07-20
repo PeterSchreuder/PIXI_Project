@@ -1,0 +1,8 @@
+body {
+    overflow: hidden;
+    background-color: dimgray;
+}
+
+#display {
+    border-style: solid;
+}

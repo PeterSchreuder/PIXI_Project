@@ -1,21 +1,25 @@
 import * as PIXI from "pixi.js"
-import Sprite = PIXI.Sprite;
 
 import {GameProperties} from "./utilities/GameProperties";
-import {Game} from "./GameLoop";
+import {GameLoop} from "./GameLoop";
 
-import RenderOptions = PIXI.RendererOptions;
+window.onload = () => onLoad();
 
 function onLoad(): void {
 
     //- Pre- load the Sprites
-    let loader = PIXI.loader;
+    let loader = PIXI.Loader.shared;
+    let app: PIXI.Application;
+    let _gameLoop: GameLoop;
 
     loader
-        .add("player", "player.png");//"./images/player.png"
+        .add("body", "body.png")
+        .add("bodyEnd", "bodyEnd.png")
+        .add("player", "player.png")
+        .add("tile", "tile.png");
         
-    loader.onProgress.add(showProgress);
-    loader.onError.add(reportError);
+    loader.onProgress.add(showLoaderProgress);
+    loader.onError.add(reportLoaderError);
     loader.onComplete.add(setup);
 
     let spriteResources = loader.resources;
@@ -25,37 +29,30 @@ function onLoad(): void {
         console.log("Loaded Resources: ", resources);
     });
 
+    //- Setup the game
     function setup(): void {
-
-        let rendererOptions: RenderOptions = {
-            backgroundColor: 0xAAAAAA,
-            resolution: 1,
-        }
-
-        let renderer = PIXI.autoDetectRenderer(
-            GameProperties.levelWidth,
-            GameProperties.levelHeight,
-            rendererOptions
-        );
+        
+        app = new PIXI.Application({
+            width: GameProperties.levelWidth,
+            height: GameProperties.levelHeight,
+            backgroundColor: 0xAAAAAA
+        });
 
         let mainGameDiv = document.querySelector("#display");
 
         if (mainGameDiv != null)
-            mainGameDiv.appendChild(renderer.view);
+            mainGameDiv.appendChild(app.view);
         else
             console.error("No 'display' div found in html");
 
-        // let player = PIXI.Sprite.from(spriteResources.player.texture);
-        // player.x = GameProperties.levelWidth / 2;
-        // player.y = GameProperties.levelHeight / 2;
-        // player.anchor.set(0.5);
-        // renderer.stage.addChild(player);
+        // Start the game
+        _gameLoop = new GameLoop(app);
 
-        gameLoop(new Game(renderer));
-        //console.log(player)
+        _gameLoop.setupGame();
+        gameLoop(_gameLoop);
     }
 
-    function gameLoop(game: Game): void {
+    function gameLoop(game: GameLoop): void {
 
         requestAnimationFrame(() => gameLoop(game));
         game.update();
@@ -63,14 +60,13 @@ function onLoad(): void {
     }
 }
 
-function showProgress(e: any): void {
+function showLoaderProgress(e: any): void {
 
     console.log(e.progress);
 }
 
-function reportError(e: any): void {
+function reportLoaderError(e: any): void {
 
     console.error("ERROR: " + e.message);
 }
 
-window.onload = () => onLoad();
