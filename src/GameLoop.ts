@@ -46,6 +46,8 @@ export class GameLoop implements UpdateableElement {
 
     private _availableTiles: Map<string, Tile>;
 
+    private _winAmount: number;
+
     //public systemAssets: {stage: PIXI.Container | undefined, inputManager: InputManager | undefined, textManager: TextManager | undefined, gameObjects: Map<string, GameObject | Player>};
 
     constructor (rendered: PIXI.Application) {
@@ -217,8 +219,18 @@ export class GameLoop implements UpdateableElement {
                                     {
                                         case PickupTypes.LengthIncrease:
 
-                                            _player.AddBodyObject(1);
-                                            this.createRandomPickup();
+                                            // If there is no space left, the player has won
+                                            if (this.availableTiles.size == 0)
+                                            {
+                                                if (this.gameManager)
+                                                    this.gameManager.gameStateCurrent = GameStates.Lose;
+                                            }
+                                            else// Create a new pickup
+                                            {
+                                                _player.AddBodyObject(1);
+                                                this.createRandomPickup();
+                                            }
+                                            
 
                                         break;
                                     }
@@ -268,8 +280,6 @@ export class GameLoop implements UpdateableElement {
 
         let _size = this.availableTiles.size;
 
-        console.log(_size)
-
         if (_size > 0)
         {
             let _array = new Array<Tile>();
@@ -280,16 +290,24 @@ export class GameLoop implements UpdateableElement {
 
             let _index = Math.round(Math.random() * _array.length);
 
-            console.log(_array)
-
             let _tile = _array[_index];
-
-            console.log(_tile, _index)
 
             if (_tile)
             {
-                let _pickUp = new Pickup(this.rootStage, _tile.gridArrayX, _tile.gridArrayY, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Pickup, PickupTypes.LengthIncrease);
-                this.gameObjects.set("Pickup", _pickUp);
+                let _pickUp;
+
+                //- If a pickup does not exits, create it
+                if (!this.gameObjects.has("Pickup"))
+                {
+                    _pickUp = new Pickup(this.rootStage, _tile.gridArrayX, _tile.gridArrayY, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Pickup, PickupTypes.LengthIncrease);
+                    this.gameObjects.set("Pickup", _pickUp);
+                }
+                else//- Place the current one on the new position
+                {
+                    _pickUp = <Pickup>this.gameObjects.get("Pickup");
+                    _pickUp.x = _tile.gridArrayX;
+                    _pickUp.y = _tile.gridArrayY;
+                }
             }
         }
     }
