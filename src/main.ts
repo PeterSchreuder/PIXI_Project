@@ -16,7 +16,8 @@ function onLoad(): void {
         .add("body", "body.png")
         .add("bodyEnd", "bodyEnd.png")
         .add("player", "player.png")
-        .add("tile", "tile.png");
+        .add("tile", "tile.png")
+        .add("pickup", "pickup.png");
         
     loader.onProgress.add(showLoaderProgress);
     loader.onError.add(reportLoaderError);

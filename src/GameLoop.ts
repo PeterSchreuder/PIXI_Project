@@ -299,7 +299,7 @@ export class GameLoop implements UpdateableElement {
                 //- If a pickup does not exits, create it
                 if (!this.gameObjects.has("Pickup"))
                 {
-                    _pickUp = new Pickup(this.rootStage, _tile.gridArrayX, _tile.gridArrayY, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Pickup, PickupTypes.LengthIncrease);
+                    _pickUp = new Pickup(this.rootStage, _tile.gridArrayX, _tile.gridArrayY, PIXI.Sprite.from(PIXI.Loader.shared.resources.pickup.texture), ObjectTypes.Pickup, PickupTypes.LengthIncrease);
                     this.gameObjects.set("Pickup", _pickUp);
                 }
                 else//- Place the current one on the new position

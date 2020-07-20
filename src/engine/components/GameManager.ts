@@ -58,12 +58,12 @@ export class GameManager {
                 this.resetGame();
 
                 //
-                this.textManager.CreateText("Screen Text", 5, 5, "Begin Screen", {
-                    fill: "#ffa200",
-                    fontSize: 20,
-                    lineJoin: "round",
-                    strokeThickness: 5
-                });
+                // this.textManager.CreateText("Screen Text", 5, 5, "Begin Screen", {
+                //     fill: "#ffa200",
+                //     fontSize: 20,
+                //     lineJoin: "round",
+                //     strokeThickness: 5
+                // });
 
                 this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, GameProperties.levelMidY - 150, "Snake Game", {
                     fill: "#ffa200",
@@ -124,12 +124,12 @@ export class GameManager {
 
                 this.textManager.textDisableAll();
 
-                this.textManager.CreateText("Screen Text", 5, 5, "Mid Screen", {
-                    fill: "#ffa200",
-                    fontSize: 20,
-                    lineJoin: "round",
-                    strokeThickness: 5
-                });
+                // this.textManager.CreateText("Screen Text", 5, 5, "Mid Screen", {
+                //     fill: "#ffa200",
+                //     fontSize: 20,
+                //     lineJoin: "round",
+                //     strokeThickness: 5
+                // });
 
             break;
 
@@ -137,12 +137,12 @@ export class GameManager {
 
                 this.textManager.textDisableAll();
 
-                this.textManager.CreateText("Screen Text", 5, 5, "Win Screen", {
-                    fill: "#ffa200",
-                    fontSize: 20,
-                    lineJoin: "round",
-                    strokeThickness: 5
-                });
+                // this.textManager.CreateText("Screen Text", 5, 5, "Win Screen", {
+                //     fill: "#ffa200",
+                //     fontSize: 20,
+                //     lineJoin: "round",
+                //     strokeThickness: 5
+                // });
 
                 _midText = this.textManager.CreateText("Mid Text", GameProperties.levelMidX, GameProperties.levelMidY + 100, "You've Won!\nPress Enter to play again", {
                     fill: "#ffa200",
@@ -159,12 +159,12 @@ export class GameManager {
 
                 this.textManager.textDisableAll();
 
-                this.textManager.CreateText("Screen Text", 5, 5, "Lose Screen", {
-                    fill: "#ffa200",
-                    fontSize: 20,
-                    lineJoin: "round",
-                    strokeThickness: 5
-                });
+                // this.textManager.CreateText("Screen Text", 5, 5, "Lose Screen", {
+                //     fill: "#ffa200",
+                //     fontSize: 20,
+                //     lineJoin: "round",
+                //     strokeThickness: 5
+                // });
 
                 this._logo = this.textManager.CreateText("Logo", GameProperties.levelMidX, 5.5 * 32, "Game Over", {
                     fill: "#ff0000",
