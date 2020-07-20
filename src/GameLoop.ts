@@ -80,14 +80,9 @@ export class GameLoop implements UpdateableElement {
         this._gridSystem = new GridSystem(this.rootStage, 17, 17, 32, this);
         this._gridSystem.gridInit();
 
-        //this._gridSystem.gridGetTile(5,5).x += 5
-
         this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Player, this));
         
-        //this.gameObjects.set("player2", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.loader.resources.player.texture)));
-        
         this.gameManager = new GameManager(this.rootStage, this.inputManager);
-        
     }
 
     public update(): void {
@@ -96,29 +91,25 @@ export class GameLoop implements UpdateableElement {
 
         this.gameObjects.forEach(obj => {obj.update()});
         
-        let _player;
+        //- Typecast GameObject player to Player
+        let _player = <Player>this.getGameObject("player");
 
         if (this.gameManager) {
 
             this.gameManager.update();
-            
-            
 
             switch (this.gameManager.gameStateCurrent)
             {
                 case GameStates.Begin:
 
-
                     //
-                    
 
                 break;
 
                 case GameStates.Mid:
                     
                     //#region Move the player
-                    _player = this.getGameObject("player");
-                    
+
                     if (_player) {
 
                         let _direction = undefined;
@@ -145,36 +136,19 @@ export class GameLoop implements UpdateableElement {
                         }
                     }
 
-                    
-
-                    // for (let _x = 0; _x < this.gameObjects.size; _x++) {
-
-                    //     let _obj = this.gameObjects.get(this.gameObjects.)
-                    //     if ()
-                    // }
-
                 break;
 
                 case GameStates.Win:
-
-                    //
-                    _player = this.getGameObject("player");
                     
-                    if (_player) {
-                        _player.speed = 0;
-                    }
+                    // Stop the player
+                    _player.speed = 0;
 
                 break;
 
                 case GameStates.Lose:
 
-                    //
-                    _player = this.getGameObject("player");
-                    
-                    if (_player) {
-                        _player.speed = 0;
-                    }
-
+                    // Stop the player
+                    _player.speed = 0;
 
                 break;
             }
