@@ -6,6 +6,7 @@ import { TextManager } from "./TextManager";
 import {GameStates} from "../../utilities/GameStates";
 import { InputManager } from "./InputManager";
 import { vk_Keys } from "../../utilities/VirtualKeyboard";
+import { GameLoop } from "../../GameLoop";
 
 export class GameManager {
     
@@ -21,7 +22,9 @@ export class GameManager {
 
     private _timer: number;
 
-    constructor (_stage: PIXI.Container, _inputManager: InputManager) {
+    private _gameLoop: GameLoop;
+
+    constructor (_stage: PIXI.Container, _inputManager: InputManager, _gameLoop: GameLoop) {
 
         this._stage = _stage;
         this.inputManager = _inputManager;
@@ -34,6 +37,8 @@ export class GameManager {
         this.gameStateCurrent = GameStates.Begin;
 
         this._timer = 0;
+
+        this._gameLoop = _gameLoop;
     }
 
     get gameStateCurrent(): GameStates { return this._gameStateCurrent; }
@@ -111,6 +116,8 @@ export class GameManager {
             break;
 
             case GameStates.Mid:
+
+                this.gameLoop.createRandomPickup();
 
                 this.textManager.textDisableAll();
 
@@ -249,6 +256,8 @@ export class GameManager {
 
         this.textManager.textDisableAll();
     }
+
+    get gameLoop(): GameLoop { return this._gameLoop; };
 
     get gameStatePrev(): GameStates { return this._gameStatePrev; }
 }

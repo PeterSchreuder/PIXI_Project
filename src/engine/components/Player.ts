@@ -73,15 +73,19 @@ export class Player extends GameObject {
         }
     }
 
-    public AddBodyObject(_amount: number, _direction: number) {
+    public AddBodyObject(_amount: number, _direction?: number | undefined) {
 
         let _piece, _x = 0, _y = 0, _sprite = PIXI.Sprite.from(PIXI.Loader.shared.resources.body.texture), _dir = _direction;
         let _size = this._bodyList.length | 0;
+
+        
 
         for (let _i = 1; _i < _amount + 1; _i++) {
             
             _i = this._bodyList.length;
             
+            if (_dir == undefined)
+                _dir = this._bodyList[_i - 1].rotation;
 
             if (_i == 0)
             {

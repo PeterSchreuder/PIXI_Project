@@ -2,5 +2,10 @@ export enum ObjectTypes {
     Generic,
     Player,
     Body,
-    PickupLengthIncrease,
+    Pickup,
+}
+
+export enum PickupTypes {
+    LengthIncrease,
+    Health,
 }

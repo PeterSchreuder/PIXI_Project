@@ -59,22 +59,18 @@ export class GridSystem {
 
     public gridGetTile(_x: number, _y: number): Tile | undefined {
 
+        let _return = undefined, _array = this.gridArray[_x];
 
-        // var lastTime = Date.now();
-        // this.gridArray[_x][_y];
-        // var now = Date.now();    console.log(now - lastTime);
+        if (_array) {
+            _return = this.gridArray[_x][_y];
+        }
 
-
-
-        return this.gridArray[clamp(_x, 0, this.gridWidth - 1)][clamp(_y, 0, this.gridHeight - 1)];
-
-
+        return _return;
     }
 
     public gridGetTiles(): Array<Tile> {
 
         let _array = Array<Tile>();
-        let _x = -1;
         
         let _tile, _tile2;
         for (let _x = 0; _x < this.gridArray.length; _x++) {

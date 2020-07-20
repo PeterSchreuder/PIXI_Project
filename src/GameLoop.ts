@@ -20,7 +20,8 @@ import {vk_Keys} from "./utilities/VirtualKeyboard";
 import {GameManager} from "./engine/components/GameManager";
 import { GameStates } from "./utilities/GameStates";
 import { Tile } from "./engine/components/gridsystem/Tile";
-import { ObjectTypes } from "./utilities/Enums";
+import { ObjectTypes, PickupTypes } from "./utilities/Enums";
+import { Pickup } from "./engine/components/Pickup";
 
 export class GameLoop implements UpdateableElement {
 
@@ -82,7 +83,7 @@ export class GameLoop implements UpdateableElement {
 
         this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Player, this));
         
-        this.gameManager = new GameManager(this.rootStage, this.inputManager);
+        this.gameManager = new GameManager(this.rootStage, this.inputManager, this);
     }
 
     public update(): void {
@@ -125,7 +126,8 @@ export class GameLoop implements UpdateableElement {
                         }
     
                         if (inputManager.keyUp(vk_Keys.space))
-                            _player.AddBodyObject(1, _player.currentDirection);
+                            this.createRandomPickup();
+                            //_player.AddBodyObject(1, _player.currentDirection);
     
                         if (_player.checkHitWall())
                             this.gameManager.gameStateCurrent = GameStates.Lose;
@@ -184,21 +186,40 @@ export class GameLoop implements UpdateableElement {
                     // Check what kind of tile it is
                     if (_obj == _player)
                     {
-                        //console.log(_obj.constructor.name, "==", _player.constructor.name)
-
                         //
-                        if (_listTile.occupier && _listTile.occupier != _player)
+                        let _occupier = _listTile.occupier;
+                        if (_occupier && _occupier != _player)
                         {
                             // Check what the player collided with
-                            switch (_listTile.occupier.type)
+                            switch (_occupier.type)
                             {
                                 case ObjectTypes.Body:// Body is Gameover
 
-                                    //console.log(_listTile.occupier.constructor.name, "!=", _player.constructor.name)
-                                    
                                     if (this.gameManager)
                                         this.gameManager.gameStateCurrent = GameStates.Lose;
-                                    //return;
+                                    
+                                    return;
+
+                                break;
+
+                                case ObjectTypes.Pickup:// Grow player
+
+                                    let _pickup = <Pickup>_occupier;
+                                    // Place the pickup outside the level
+                                    _pickup.x = GameProperties.levelWidth + 20;
+                                    _pickup.x = GameProperties.levelHeight + 20;
+
+                                    switch (_pickup.pickupType)
+                                    {
+                                        case PickupTypes.LengthIncrease:
+
+                                            _player.AddBodyObject(1);
+
+
+                                        break;
+                                    }
+                                    
+                                    return;
 
                                 break;
                             }
@@ -225,10 +246,7 @@ export class GameLoop implements UpdateableElement {
                     if (_index != undefined)
                     {
                         this.availableTiles.delete(_id);
-                        console.log("Removed index:", _index);
                     }
-
-                    
                 }
             }
         });
@@ -240,6 +258,36 @@ export class GameLoop implements UpdateableElement {
         //     console.log("Amount", _i)
         //     this._canDebug = false;
         // }
+    }
+
+    public createRandomPickup() {
+
+        let _size = this.availableTiles.size;
+
+        console.log(_size)
+
+        if (_size > 0)
+        {
+            let _array = new Array<Tile>();
+            this.availableTiles.forEach(_tile => {
+
+                _array.push(_tile);
+            });
+
+            let _index = Math.round(Math.random() * _array.length);
+
+            console.log(_array)
+
+            let _tile = _array[_index];
+
+            console.log(_tile, _index)
+
+            if (_tile)
+            {
+                let _pickUp = new Pickup(this.rootStage, _tile.gridArrayX, _tile.gridArrayY, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Pickup, PickupTypes.LengthIncrease);
+                this.gameObjects.set("Pickup", _pickUp);
+            }
+        }
     }
 
     public render(): void {
