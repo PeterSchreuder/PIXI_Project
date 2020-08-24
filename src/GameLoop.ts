@@ -1,5 +1,7 @@
 import * as PIXI from "pixi.js"
 
+import "pixi-layers";
+
 
 //import {GameManager} from "./engine/components/GameManager";
 //import {RenderableElement} from "./utilities/RenderableElement";
@@ -48,6 +50,8 @@ export class GameLoop implements UpdateableElement {
 
     private _winAmount: number;
 
+    private _layers: {};
+
     //public systemAssets: {stage: PIXI.Container | undefined, inputManager: InputManager | undefined, textManager: TextManager | undefined, gameObjects: Map<string, GameObject | Player>};
 
     constructor (rendered: PIXI.Application) {
@@ -76,6 +80,7 @@ export class GameLoop implements UpdateableElement {
 
         this._availableTiles = new Map<string, Tile>();
 
+        this._layers = {background: new PIXI.display.Group(0, true), foreground: new PIXI.display.Group(0, true), gui: new PIXI.display.Group(0, true)}
     }
 
     public setupGame(): void {
@@ -90,6 +95,8 @@ export class GameLoop implements UpdateableElement {
         this.gameObjects.set("player", new Player(this.rootStage, GameProperties.levelWidth / 2, GameProperties.levelHeight / 2, PIXI.Sprite.from(PIXI.Loader.shared.resources.player.texture), ObjectTypes.Player, this));
         
         this.gameManager = new GameManager(this.rootStage, this.inputManager, this);
+
+
     }
 
     public update(): void {
